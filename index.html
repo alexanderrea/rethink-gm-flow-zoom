@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GM · Creative Production Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#3fe0d8; --cyan-bright:#7af0ea;
+    --magenta:#f25cc1; --orchid:#c569cf; --chip-label:#d68fdc;
+    --lime:#a6e635; --lime-bright:#c4f06a;
+    --text:#eaf0f5; --text-strong:#f4f8fb;
+    --muted:#7e8a99; --faint:#647284; --faint2:#5b6675;
+    --card-bg:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82));
+    --card-bg-solid:linear-gradient(180deg,#0f1822,#0a0f16);
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --display:'Space Grotesk',system-ui,sans-serif;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ background:#06090f; }
+  body{
+    min-height:100vh;
+    background:radial-gradient(120% 80% at 50% -10%, #0d1825 0%, #06090f 55%, #04060a 100%);
+    color:var(--text);
+    font-family:var(--display);
+    overflow-x:hidden;
+  }
+
+  @keyframes flow{ to{ stroke-dashoffset:-280; } }
+
+  /* ---------- Header ---------- */
+  .header{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:28px; flex-wrap:wrap;
+    padding:22px 36px 18px;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+    background:linear-gradient(180deg, #090f17 0%, #080d14 75%, rgba(8,13,20,0.92) 100%);
+    backdrop-filter:blur(8px);
+  }
+  .eyebrow-top{ font:500 12px/1 var(--mono); letter-spacing:0.22em; color:var(--cyan); }
+  .h1{ margin-top:9px; font:700 30px/1 var(--display); letter-spacing:-0.015em; color:var(--text-strong); }
+  .subtitle{ margin-top:6px; font:400 14px/1 var(--display); color:var(--muted); }
+
+  .header-right{ display:flex; align-items:center; gap:26px; flex-wrap:wrap; }
+  .legend{ display:flex; flex-direction:column; gap:8px; }
+  .legend-row{ display:flex; gap:16px; align-items:center; }
+  .legend-item{ display:flex; align-items:center; gap:7px; font:500 11px/1 var(--mono); letter-spacing:0.08em; color:#8c97a8; }
+  .swatch{ width:11px; height:11px; border-radius:3px; }
+  .swatch--stage{ border:1.5px solid var(--cyan); }
+  .swatch--platform{ background:var(--magenta); }
+  .swatch--automation{ background:var(--lime); }
+  .legend-note{ font:500 11px/1 var(--mono); letter-spacing:0.08em; color:var(--faint2); }
+  .divider{ width:1px; height:46px; background:rgba(255,255,255,0.1); }
+  .controls{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+  .phase-text{ font:500 12px/1 var(--mono); letter-spacing:0.12em; color:var(--cyan); white-space:nowrap; }
+  .run-btn{
+    font:600 13px/1 var(--mono); letter-spacing:0.1em; color:#04110f;
+    background:var(--cyan); border:none; border-radius:10px; padding:13px 22px;
+    cursor:pointer; box-shadow:0 0 26px -6px rgba(63,224,216,0.7); transition:background .2s;
+  }
+  .run-btn:hover{ background:var(--cyan-bright); }
+
+  /* ---------- Board ---------- */
+  .wrap{
+    position:relative; width:100%;
+    display:flex; justify-content:center; align-items:flex-start;
+    overflow:hidden; padding-top:8px;
+  }
+  .board{ position:relative; width:1660px; height:1560px; transform-origin:top left; }
+
+  .container-frame{
+    position:absolute; left:170px; top:212px; width:1455px; height:1330px;
+    border:1.5px solid rgba(197,105,207,0.45); border-radius:22px;
+    background:radial-gradient(120% 60% at 50% 0%, rgba(197,105,207,0.05), rgba(255,255,255,0.008) 60%);
+    pointer-events:none;
+  }
+
+  .connectors{ position:absolute; left:0; top:0; width:1660px; height:1560px; overflow:visible; pointer-events:none; }
+  .connectors path.flow{ animation:flow 6s linear infinite; }
+  .connectors path.flow-fast{ animation:flow 5s linear infinite; }
+
+  /* column headers */
+  .col-head{ position:absolute; top:244px; display:flex; align-items:baseline; gap:11px; }
+  .col-code{ font:700 19px/1 var(--display); letter-spacing:0.02em; color:var(--cyan); }
+  .col-desc{ font:400 13px/1 var(--display); color:var(--muted); }
+
+  /* phase rail */
+  .rail{
+    position:absolute; left:22px; width:150px;
+    display:flex; flex-direction:column; gap:4px;
+    padding:10px 14px;
+    border-left:2px solid rgba(63,224,216,0.5); border-radius:0 9px 9px 0;
+    box-shadow:var(--glow,none); transition:box-shadow .4s ease;
+  }
+  .rail-label{ font:700 18px/1 var(--display); letter-spacing:0.08em; color:#d6efec; }
+  .rail-sub{ font:500 10.5px/1.3 var(--mono); letter-spacing:0.05em; color:var(--faint); }
+
+  /* ---------- Nodes ---------- */
+  .node{
+    position:absolute; box-sizing:border-box; cursor:pointer;
+    border:1.6px solid rgba(63,224,216,0.5); border-radius:14px;
+    --bg:var(--card-bg); background:var(--bg);
+    box-shadow:var(--glow,none);
+    transform-origin:center center;
+    transition:box-shadow .45s ease, border-color .25s ease,
+               transform .28s cubic-bezier(.2,.7,.2,1), background .2s ease;
+  }
+  .node:hover{
+    transform:scale(2); z-index:60;
+    border-color:var(--cyan-bright);
+    background:var(--card-bg-solid);
+    box-shadow:0 0 0 1.5px var(--cyan), 0 0 38px -6px rgba(63,224,216,0.75);
+  }
+  .node--limeglow:hover{
+    border-color:var(--lime-bright);
+    box-shadow:0 0 0 1.5px var(--lime), 0 0 38px -6px rgba(166,230,53,0.7);
+  }
+  .node--dashed{
+    border-style:dashed; border-color:rgba(63,224,216,0.45);
+    --bg:linear-gradient(180deg,rgba(17,26,35,0.4),rgba(9,14,20,0.6));
+  }
+  .node--hub{
+    border-color:rgba(166,230,53,0.55); border-radius:12px;
+    --bg:linear-gradient(180deg,rgba(24,30,14,0.55),rgba(12,16,8,0.78));
+  }
+  .node--chip{
+    border:1.4px solid rgba(197,105,207,0.55); border-radius:10px;
+    --bg:linear-gradient(180deg,rgba(30,18,32,0.7),rgba(14,10,18,0.85));
+  }
+  .node--chip:hover{
+    border-color:#dd8ae3;
+    box-shadow:0 0 0 1.5px var(--orchid), 0 0 30px -6px rgba(197,105,207,0.6);
+  }
+
+  /* card inner layouts */
+  .card{ height:100%; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; }
+  .card--entry{ padding:0 26px; gap:6px; }
+  .card--center{ align-items:center; justify-content:center; flex-direction:row; }
+  .card--row{ flex-direction:row; align-items:center; justify-content:space-between; gap:18px; padding:0 26px; }
+  .card--chip{ height:auto; padding:7px 14px; flex-direction:row; align-items:center; gap:9px; }
+  .card--hub{ flex-direction:row; align-items:center; gap:12px; }
+
+  .eyebrow{ font:500 11.5px/1 var(--mono); letter-spacing:0.15em; color:var(--faint); }
+  .eyebrow--entry{ letter-spacing:0.16em; }
+  .title{ font:600 22px/1.1 var(--display); letter-spacing:-0.01em; color:var(--text); }
+  .title--entry{ font-size:23px; line-height:1; }
+  .title--sm{ font-size:21px; line-height:1.05; }
+  .title--xs{ font-size:20px; line-height:1.1; }
+  .title--wrap{ font-size:20px; line-height:1.18; }
+  .title--hub{ font-size:18px; line-height:1; letter-spacing:0.01em; }
+  .gm-label{ font:700 24px/1 var(--display); letter-spacing:0.04em; color:var(--text); }
+  .tag{ font:600 14px/1 var(--mono); letter-spacing:0.14em; }
+  .tag--sm{ font-size:13px; }
+  .tag--magenta{ color:var(--magenta); }
+  .tag--lime{ color:var(--lime); }
+  .meta{ font:500 12px/1 var(--mono); letter-spacing:0.1em; color:var(--muted); }
+  .dot{ width:8px; height:8px; border-radius:2px; }
+  .dot--chip{ background:var(--orchid); }
+  .dot--hub{ background:var(--lime); }
+  .chip-label{ font:600 13px/1 var(--mono); letter-spacing:0.18em; color:var(--chip-label); }
+  .col-l{ display:flex; flex-direction:column; gap:7px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .connectors path{ animation:none !important; }
+    .node{ transition:box-shadow .2s ease, border-color .2s ease, background .2s ease; }
+    .node:hover{ transform:scale(1.04); }
+  }
+</style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="eyebrow-top">GM · MARKETING OPERATING MODEL</div>
+      <h1 class="h1">Creative Production Pipeline</h1>
+      <div class="subtitle">Tier 1 · Tier 2 · Tier Social — three lanes, running in parallel</div>
+    </div>
+    <div class="header-right">
+      <div class="legend">
+        <div class="legend-row">
+          <div class="legend-item"><span class="swatch swatch--stage"></span>Stage</div>
+          <div class="legend-item"><span class="swatch swatch--platform"></span>Platform</div>
+          <div class="legend-item"><span class="swatch swatch--automation"></span>Automation</div>
+        </div>
+        <div class="legend-note">— — —&nbsp;&nbsp;dashed = asset / data flow</div>
+      </div>
+      <div class="divider"></div>
+      <div class="controls">
+        <div class="phase-text" id="phaseText">HOVER ANY STEP FOR DETAIL</div>
+        <button class="run-btn" id="runBtn" type="button">▶&nbsp;&nbsp;Run flow</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap" id="wrap">
+    <div class="board" id="board">
+
+      <div class="container-frame"></div>
+
+      <svg class="connectors" viewBox="0 0 1660 1560" aria-hidden="true">
+        <defs>
+          <marker id="arC" markerWidth="12" markerHeight="12" refX="7" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M1,1 L8,5 L1,9" fill="none" stroke="#5fd8cf" stroke-width="1.5"></path>
+          </marker>
+        </defs>
+        <path class="flow" d="M132,99 L596,100" fill="none" stroke="#4fc8c0" stroke-width="1.6" stroke-dasharray="7 7" marker-end="url(#arC)"></path>
+        <path class="flow" d="M950,146 L950,205" fill="none" stroke="#4fc8c0" stroke-width="1.6" stroke-dasharray="7 7" marker-end="url(#arC)"></path>
+        <path class="flow-fast" d="M625,815 L674,815 L674,514 L714,514" fill="none" stroke="#5fd8cf" stroke-width="1.7" stroke-dasharray="7 7" marker-end="url(#arC)"></path>
+        <polygon points="674,540 668,552 680,552" fill="#a6e635"></polygon>
+        <path class="flow-fast" d="M1110,664 L1150,664 L1150,514 L1179,514" fill="none" stroke="#5fd8cf" stroke-width="1.7" stroke-dasharray="7 7" marker-end="url(#arC)"></path>
+        <polygon points="1150,540 1144,552 1156,552" fill="#a6e635"></polygon>
+      </svg>
+
+      <!-- column headers -->
+      <div class="col-head" style="left:235px"><span class="col-code">T1</span><span class="col-desc">Tier 1 · Traditional Advertising</span></div>
+      <div class="col-head" style="left:720px"><span class="col-code">T2</span><span class="col-desc">Tier 2 · DCO · Scale Media</span></div>
+      <div class="col-head" style="left:1185px"><span class="col-code">TS</span><span class="col-desc">Tier Social · Social</span></div>
+
+      <!-- phase rail -->
+      <div class="rail" id="phHuman" style="top:330px"><span class="rail-label">HUMAN</span><span class="rail-sub">Strategy &amp; planning</span></div>
+      <div class="rail" id="phCraft" style="top:482px"><span class="rail-label">CRAFT</span><span class="rail-sub">Make the work</span></div>
+      <div class="rail" id="phDelivery" style="top:634px"><span class="rail-label">DELIVERY</span><span class="rail-sub">Ship &amp; run</span></div>
+
+      <!-- nodes injected here -->
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ----- node model -----
+  var NODES = [
+    { id:'gm',           l:40,   t:64,   w:92,  h:72,  kind:'gm' },
+    { id:'brief',        l:600,  t:58,   w:700, h:88,  kind:'entry', eyebrow:'ENTRY POINT', title:'CLIENT BRIEF' },
+    { id:'smartsheet',   l:188,  t:178,           kind:'chip', cls:'node--chip', label:'SMARTSHEET' },
+
+    // T1
+    { id:'preprod',  l:235, t:300, w:390, h:118, eyebrow:'T1 · HUMAN',     title:'Pre-Production' },
+    { id:'shoot',    l:235, t:452, w:390, h:118, eyebrow:'T1 · CRAFT',     title:'Shoot' },
+    { id:'post',     l:235, t:604, w:390, h:118, eyebrow:'T1 · DELIVERY',  title:'Post' },
+    { id:'t1dam',    l:235, t:756, w:390, h:118, eyebrow:'T1 · ARCHIVE',   title:'Final Assets — DAM', tSize:'title--sm', tag:'BYNDER', tagTone:'magenta' },
+
+    // T2
+    { id:'dco',      l:720, t:300,  w:390, h:118, eyebrow:'T2 · HUMAN',    title:'DCO Pipeline' },
+    { id:'figma',    l:720, t:452,  w:390, h:118, eyebrow:'T2 · CRAFT',    title:'Asset Creation', tSize:'title--sm', tag:'FIGMA',  tagTone:'magenta' },
+    { id:'celtra',   l:720, t:604,  w:390, h:118, eyebrow:'T2 · DELIVERY', title:'Scale Adaptation', tSize:'title--sm', tag:'CELTRA', tagTone:'magenta' },
+    { id:'t2dam',    l:720, t:756,  w:390, h:108, eyebrow:'T2 · HANDOFF',  title:'DAM Delivery', tSize:'title--xs', tag:'BYNDER', tagTone:'magenta', tagSm:true, cls:'node--dashed' },
+    { id:'ziflow',   l:720, t:894,  w:390, h:128, eyebrow:'T2 · REVIEW',   titleHtml:'Legal Review<br>&amp; Feedback Loop', tSize:'title--wrap', tag:'ZIFLOW', tagTone:'lime', cls:'node--limeglow' },
+    { id:'assetcentral', l:720, t:1042, w:390, h:60, kind:'hub', title:'Asset Central', cls:'node--hub node--limeglow' },
+    { id:'clinch',   l:720, t:1206, w:390, h:96,  eyebrow:'T2 · DISTRIBUTION', title:'Traffick', tSize:'title--sm', tag:'CLINCH', tagTone:'lime', cls:'node--limeglow' },
+    { id:'t2final',  l:720, t:1318, w:390, h:96,  eyebrow:'T2 · ARCHIVE',  title:'Final Asset — DAM', tSize:'title--sm', tag:'BYNDER', tagTone:'magenta' },
+    { id:'insight',  l:720, t:1438, w:865, h:86,  kind:'wide', eyebrow:'T2 · MEASUREMENT', title:'Reactive Insight', tSize:'title--sm', meta:'BI-MONTHLY · CADENCE TBD' },
+
+    // TS
+    { id:'social',    l:1185, t:300, w:400, h:118, eyebrow:'TS · HUMAN',    title:'Social Strategy' },
+    { id:'content',   l:1185, t:452, w:400, h:118, eyebrow:'TS · CRAFT',    title:'Content Creation' },
+    { id:'community', l:1185, t:604, w:400, h:118, eyebrow:'TS · DELIVERY', title:'Community Mgmt' }
+  ];
+
+  function tagSpan(n){
+    var cls = 'tag tag--' + (n.tagTone || 'magenta') + (n.tagSm ? ' tag--sm' : '');
+    return '<span class="' + cls + '">' + n.tag + '</span>';
+  }
+  function titleSpan(n){
+    var cls = 'title' + (n.tSize ? ' ' + n.tSize : '');
+    return '<span class="' + cls + '">' + (n.titleHtml || n.title) + '</span>';
+  }
+
+  function innerHtml(n){
+    switch(n.kind){
+      case 'gm':
+        return '<div class="card card--center"><span class="gm-label">GM</span></div>';
+      case 'entry':
+        return '<div class="card card--entry">' +
+                 '<span class="eyebrow eyebrow--entry">' + n.eyebrow + '</span>' +
+                 '<span class="title title--entry">' + n.title + '</span></div>';
+      case 'chip':
+        return '<div class="card card--chip"><span class="dot dot--chip"></span>' +
+                 '<span class="chip-label">' + n.label + '</span></div>';
+      case 'hub':
+        return '<div class="card card--hub"><span class="dot dot--hub"></span>' +
+                 '<span class="title title--hub">' + n.title + '</span></div>';
+      case 'wide':
+        return '<div class="card card--row"><div class="col-l">' +
+                 '<span class="eyebrow">' + n.eyebrow + '</span>' + titleSpan(n) +
+                 '</div><span class="meta">' + n.meta + '</span></div>';
+      default:
+        return '<div class="card"><span class="eyebrow">' + n.eyebrow + '</span>' +
+                 titleSpan(n) + (n.tag ? tagSpan(n) : '') + '</div>';
+    }
+  }
+
+  // ----- render nodes -----
+  var board = document.getElementById('board');
+  var byId = {};
+  NODES.forEach(function(n){
+    var el = document.createElement('div');
+    el.className = 'node' + (n.cls ? ' ' + n.cls : '');
+    el.dataset.id = n.id;
+    el.style.left = n.l + 'px';
+    el.style.top  = n.t + 'px';
+    if(n.w) el.style.width  = n.w + 'px';
+    if(n.h) el.style.height = n.h + 'px';
+    el.innerHTML = innerHtml(n);
+    board.appendChild(el);
+    byId[n.id] = el;
+  });
+
+  // ----- run-flow sequencing -----
+  var ORDER = [
+    ['gm','brief','smartsheet'],
+    ['preprod','dco','social'],
+    ['shoot','figma','content'],
+    ['post','celtra','community'],
+    ['t1dam','t2dam','ziflow'],
+    ['assetcentral','clinch','t2final'],
+    ['insight']
+  ];
+  var PHASE_NAMES = ['CLIENT BRIEF','HUMAN','CRAFT','DELIVERY','CONSOLIDATE','APPROVE & ROUTE','MEASURE & LOOP'];
+  var LIME = { ziflow:1, assetcentral:1, clinch:1 };
+
+  var BC = '0 0 0 2px #3fe0d8, 0 0 36px -4px rgba(63,224,216,0.9), inset 0 0 30px -14px rgba(63,224,216,0.65)';
+  var BL = '0 0 0 2px #a6e635, 0 0 36px -4px rgba(166,230,53,0.85), inset 0 0 30px -14px rgba(166,230,53,0.6)';
+  var SC = '0 0 0 1px rgba(63,224,216,0.45), 0 0 16px -8px rgba(63,224,216,0.5)';
+  var SL = '0 0 0 1px rgba(166,230,53,0.45), 0 0 16px -8px rgba(166,230,53,0.5)';
+
+  var rails = {
+    phHuman: document.getElementById('phHuman'),
+    phCraft: document.getElementById('phCraft'),
+    phDelivery: document.getElementById('phDelivery')
+  };
+  var phaseText = document.getElementById('phaseText');
+  var runBtn = document.getElementById('runBtn');
+
+  var playing = false, step = -1, timer = null;
+
+  function setGlow(el, val){
+    if(!el) return;
+    if(val) el.style.setProperty('--glow', val);
+    else el.style.removeProperty('--glow');
+  }
+  function clearAllGlows(){
+    NODES.forEach(function(n){ setGlow(byId[n.id], ''); });
+    setGlow(rails.phHuman, ''); setGlow(rails.phCraft, ''); setGlow(rails.phDelivery, '');
+  }
+
+  function render(){
+    clearAllGlows();
+    if(playing && step >= 0){
+      ORDER.forEach(function(grp, i){
+        grp.forEach(function(id){
+          var lime = !!LIME[id];
+          if(step === i) setGlow(byId[id], lime ? BL : BC);
+          else if(step > i) setGlow(byId[id], lime ? SL : SC);
+        });
+      });
+      if(step >= 1) setGlow(rails.phHuman,    step === 1 ? BC : SC);
+      if(step >= 2) setGlow(rails.phCraft,    step === 2 ? BC : SC);
+      if(step >= 3) setGlow(rails.phDelivery, step === 3 ? BC : SC);
+    }
+    phaseText.textContent = (playing && step >= 0)
+      ? ('PHASE ' + (step + 1) + '/7 — ' + PHASE_NAMES[step])
+      : 'HOVER ANY STEP FOR DETAIL';
+    runBtn.innerHTML = playing ? '■&nbsp;&nbsp;Reset' : '▶&nbsp;&nbsp;Run flow';
+  }
+
+  function togglePlay(){
+    if(playing){
+      if(timer){ clearInterval(timer); timer = null; }
+      playing = false; step = -1;
+      render();
+      return;
+    }
+    playing = true; step = 0;
+    render();
+    timer = setInterval(function(){
+      if(step >= ORDER.length - 1){ clearInterval(timer); timer = null; return; }
+      step += 1;
+      render();
+    }, 1500);
+  }
+  runBtn.addEventListener('click', togglePlay);
+
+  // ----- fit-to-width -----
+  var wrap = document.getElementById('wrap');
+  function fit(){
+    var w = wrap.clientWidth;
+    var s = Math.min((w - 8) / 1660, 1);
+    board.style.transformOrigin = 'top left';
+    board.style.transform = 'scale(' + s + ')';
+    board.style.marginLeft = Math.max(0, (w - 1660 * s) / 2) + 'px';
+    wrap.style.height = (1560 * s + 8) + 'px';
+  }
+  fit();
+  requestAnimationFrame(fit);
+  [120, 350, 700].forEach(function(t){ setTimeout(fit, t); });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  window.addEventListener('resize', fit);
+
+  render();
+})();
+</script>
+</body>
+</html>

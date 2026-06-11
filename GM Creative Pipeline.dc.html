@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#06090f; }
+  @keyframes flow { to { stroke-dashoffset:-280; } }
+  @keyframes breathe { 0%,100%{ opacity:.35 } 50%{ opacity:.7 } }
+</style>
+</helmet>
+<div style="min-height:100vh; background:radial-gradient(120% 80% at 50% -10%, #0d1825 0%, #06090f 55%, #04060a 100%); color:#eaf0f5; font-family:'Space Grotesk',sans-serif; overflow-x:hidden;">
+
+  <div style="position:sticky; top:0; z-index:50; display:flex; align-items:flex-end; justify-content:space-between; gap:28px; flex-wrap:wrap; padding:22px 36px 18px; border-bottom:1px solid rgba(255,255,255,0.07); background:linear-gradient(180deg, #090f17 0%, #080d14 75%, rgba(8,13,20,0.92) 100%); backdrop-filter:blur(8px);">
+    <div>
+      <div style="font:500 12px/1 'JetBrains Mono',monospace; letter-spacing:0.22em; color:#3fe0d8;">GM · MARKETING OPERATING MODEL</div>
+      <div style="margin-top:9px; font:700 30px/1 'Space Grotesk',sans-serif; letter-spacing:-0.015em; color:#f4f8fb;">Creative Production Pipeline</div>
+      <div style="margin-top:6px; font:400 14px/1 'Space Grotesk',sans-serif; color:#7e8a99;">Tier 1 · Tier 2 · Tier Social — three lanes, running in parallel</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:26px; flex-wrap:wrap;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; gap:16px; align-items:center;">
+          <div style="display:flex; align-items:center; gap:7px; font:500 11px/1 'JetBrains Mono',monospace; letter-spacing:0.08em; color:#8c97a8;"><span style="width:11px; height:11px; border-radius:3px; border:1.5px solid #3fe0d8;"></span>Stage</div>
+          <div style="display:flex; align-items:center; gap:7px; font:500 11px/1 'JetBrains Mono',monospace; letter-spacing:0.08em; color:#8c97a8;"><span style="width:11px; height:11px; border-radius:3px; background:#f25cc1;"></span>Platform</div>
+          <div style="display:flex; align-items:center; gap:7px; font:500 11px/1 'JetBrains Mono',monospace; letter-spacing:0.08em; color:#8c97a8;"><span style="width:11px; height:11px; border-radius:3px; background:#a6e635;"></span>Automation</div>
+        </div>
+        <div style="font:500 11px/1 'JetBrains Mono',monospace; letter-spacing:0.08em; color:#5b6675;">— — —  dashed = asset / data flow</div>
+      </div>
+      <div style="width:1px; height:46px; background:rgba(255,255,255,0.1);"></div>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+        <div style="font:500 12px/1 'JetBrains Mono',monospace; letter-spacing:0.12em; color:#3fe0d8;">{{ phaseText }}</div>
+        <button onClick="{{ togglePlay }}" style="font:600 13px/1 'JetBrains Mono',monospace; letter-spacing:0.1em; color:#04110f; background:#3fe0d8; border:none; border-radius:10px; padding:13px 22px; cursor:pointer; box-shadow:0 0 26px -6px rgba(63,224,216,0.7); transition:background .2s;" style-hover="background:#7af0ea;">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div ref="{{ wrapRef }}" style="position:relative; width:100%; display:flex; justify-content:center; align-items:flex-start; overflow:hidden; padding-top:8px;">
+    <div ref="{{ boardRef }}" style="position:relative; width:1660px; height:1560px; transform-origin:top center;">
+
+      <!-- SMARTSHEET orchestration container -->
+      <div style="position:absolute; left:170px; top:212px; width:1455px; height:1330px; border:1.5px solid rgba(197,105,207,0.45); border-radius:22px; background:radial-gradient(120% 60% at 50% 0%, rgba(197,105,207,0.05), rgba(255,255,255,0.008) 60%); pointer-events:none;"></div>
+
+      <!-- connectors -->
+      <svg viewBox="0 0 1660 1560" style="position:absolute; left:0; top:0; width:1660px; height:1560px; overflow:visible; pointer-events:none;">
+        <defs>
+          <marker id="arC" markerWidth="12" markerHeight="12" refX="7" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M1,1 L8,5 L1,9" fill="none" stroke="#5fd8cf" stroke-width="1.5"></path>
+          </marker>
+        </defs>
+        
+        <path d="M132,99 L596,100" fill="none" stroke="#4fc8c0" stroke-width="1.6" stroke-dasharray="7 7" marker-end="url(#arC)" style="animation:flow 6s linear infinite;"></path>
+        <path d="M950,146 L950,205" fill="none" stroke="#4fc8c0" stroke-width="1.6" stroke-dasharray="7 7" marker-end="url(#arC)" style="animation:flow 6s linear infinite;"></path>
+        <path d="M625,815 L674,815 L674,514 L714,514" fill="none" stroke="#5fd8cf" stroke-width="1.7" stroke-dasharray="7 7" marker-end="url(#arC)" style="animation:flow 5s linear infinite;"></path>
+        
+        <path d="M1110,664 L1150,664 L1150,514 L1179,514" fill="none" stroke="#5fd8cf" stroke-width="1.7" stroke-dasharray="7 7" marker-end="url(#arC)" style="animation: flow 5s linear infinite; width: 40px; height: 174px"></path>
+        
+      </svg>
+
+      <!-- GM -->
+      <div data-id="gm" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:40px; top:64px; width:92px; height:72px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.6); border-radius:12px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.gm }};" style-hover="border-color:#7af0ea; transform:scale(2); z-index:60;">
+        <span style="font:700 24px/1 'Space Grotesk',sans-serif; letter-spacing:0.04em; color:#eaf0f5;">GM</span>
+      </div>
+
+      <!-- CLIENT BRIEF -->
+      <div data-id="brief" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:600px; top:58px; width:700px; height:88px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.6); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; display:flex; flex-direction:column; justify-content:center; padding:0 26px; gap:6px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.brief }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.16em; color:#647284;">ENTRY POINT</span>
+        <span style="font:600 23px/1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">CLIENT BRIEF</span>
+      </div>
+
+      <!-- SMARTSHEET label chip -->
+      <div data-id="smartsheet" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:188px; top:178px; display:flex; align-items:center; gap:9px; padding:7px 14px; border:1.4px solid rgba(197,105,207,0.55); border-radius:10px; background:linear-gradient(180deg,rgba(30,18,32,0.7),rgba(14,10,18,0.85)); cursor:pointer; transition:box-shadow .4s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.smartsheet }};" style-hover="border-color:#dd8ae3; transform:scale(2); z-index:60;">
+        <span style="width:8px; height:8px; border-radius:2px; background:#c569cf;"></span>
+        <span style="font:600 13px/1 'JetBrains Mono',monospace; letter-spacing:0.18em; color:#d68fdc;">SMARTSHEET</span>
+      </div>
+
+      <!-- column headers -->
+      <div style="position:absolute; left:235px; top:244px; display:flex; align-items:baseline; gap:11px;">
+        <span style="font:700 19px/1 'Space Grotesk',sans-serif; color:#3fe0d8; letter-spacing:0.02em;">T1</span>
+        <span style="font:400 13px/1 'Space Grotesk',sans-serif; color:#7e8a99;">Tier 1 · Traditional Advertising</span>
+      </div>
+      <div style="position:absolute; left:720px; top:244px; display:flex; align-items:baseline; gap:11px;">
+        <span style="font:700 19px/1 'Space Grotesk',sans-serif; color:#3fe0d8; letter-spacing:0.02em;">T2</span>
+        <span style="font:400 13px/1 'Space Grotesk',sans-serif; color:#7e8a99;">Tier 2 · DCO · Scale Media</span>
+      </div>
+      <div style="position:absolute; left:1185px; top:244px; display:flex; align-items:baseline; gap:11px;">
+        <span style="font:700 19px/1 'Space Grotesk',sans-serif; color:#3fe0d8; letter-spacing:0.02em;">TS</span>
+        <span style="font:400 13px/1 'Space Grotesk',sans-serif; color:#7e8a99;">Tier Social · Social</span>
+      </div>
+
+      <!-- phase rail labels -->
+      <div style="position:absolute; left:22px; top:330px; width:150px; display:flex; flex-direction:column; gap:4px; padding:10px 14px; border-left:2px solid rgba(63,224,216,0.5); border-radius:0 9px 9px 0; transition:box-shadow .4s ease; box-shadow:{{ glow.phHuman }};">
+        <span style="font:700 18px/1 'Space Grotesk',sans-serif; letter-spacing:0.08em; color:#d6efec;">HUMAN</span>
+        <span style="font:500 10.5px/1.3 'JetBrains Mono',monospace; letter-spacing:0.05em; color:#647284;">Strategy &amp; planning</span>
+      </div>
+      <div style="position:absolute; left:22px; top:482px; width:150px; display:flex; flex-direction:column; gap:4px; padding:10px 14px; border-left:2px solid rgba(63,224,216,0.5); border-radius:0 9px 9px 0; transition:box-shadow .4s ease; box-shadow:{{ glow.phCraft }};">
+        <span style="font:700 18px/1 'Space Grotesk',sans-serif; letter-spacing:0.08em; color:#d6efec;">CRAFT</span>
+        <span style="font:500 10.5px/1.3 'JetBrains Mono',monospace; letter-spacing:0.05em; color:#647284;">Make the work</span>
+      </div>
+      <div style="position:absolute; left:22px; top:634px; width:150px; display:flex; flex-direction:column; gap:4px; padding:10px 14px; border-left:2px solid rgba(63,224,216,0.5); border-radius:0 9px 9px 0; transition:box-shadow .4s ease; box-shadow:{{ glow.phDelivery }};">
+        <span style="font:700 18px/1 'Space Grotesk',sans-serif; letter-spacing:0.08em; color:#d6efec;">DELIVERY</span>
+        <span style="font:500 10.5px/1.3 'JetBrains Mono',monospace; letter-spacing:0.05em; color:#647284;">Ship &amp; run</span>
+      </div>
+
+      <!-- ===== T1 lane ===== -->
+      <div data-id="preprod" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:235px; top:300px; width:390px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:8px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.preprod }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T1 · HUMAN</span>
+        <span style="font:600 22px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Pre-Production</span>
+      </div>
+      <div data-id="shoot" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:235px; top:452px; width:390px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:8px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.shoot }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T1 · CRAFT</span>
+        <span style="font:600 22px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Shoot</span>
+      </div>
+      <div data-id="post" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:235px; top:604px; width:390px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:8px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.post }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T1 · DELIVERY</span>
+        <span style="font:600 22px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Post</span>
+      </div>
+      <div data-id="t1dam" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:235px; top:756px; width:390px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.t1dam }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T1 · ARCHIVE</span>
+        <span style="font:600 21px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Final Assets — DAM</span>
+        <span style="font:600 14px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; color:#f25cc1;">BYNDER</span>
+      </div>
+
+      <!-- ===== T2 lane ===== -->
+      <div data-id="dco" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:300px; width:390px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:8px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.dco }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T2 · HUMAN</span>
+        <span style="font:600 22px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">DCO Pipeline</span>
+      </div>
+      <div data-id="figma" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:452px; width:390px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.figma }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T2 · CRAFT</span>
+        <span style="font:600 21px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Asset Creation</span>
+        <span style="font:600 14px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; color:#f25cc1;">FIGMA</span>
+      </div>
+      <div data-id="celtra" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:604px; width:390px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.celtra }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T2 · DELIVERY</span>
+        <span style="font:600 21px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Scale Adaptation</span>
+        <span style="font:600 14px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; color:#f25cc1;">CELTRA</span>
+      </div>
+      <div data-id="t2dam" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:756px; width:390px; height:108px; box-sizing:border-box; border:1.6px dashed rgba(63,224,216,0.45); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.4),rgba(9,14,20,0.6)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.t2dam }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.65); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T2 · HANDOFF</span>
+        <span style="font:600 20px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">DAM Delivery</span>
+        <span style="font:600 13px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; color:#f25cc1;">BYNDER</span>
+      </div>
+      <div data-id="ziflow" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:894px; width:390px; height:128px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.ziflow }};" style-hover="border-color:#c4f06a; box-shadow:0 0 0 1.5px #a6e635,0 0 38px -6px rgba(166,230,53,0.7); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T2 · REVIEW</span>
+        <span style="font:600 20px/1.18 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Legal Review<br>&amp; Feedback Loop</span>
+        <span style="font:600 14px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; color:#a6e635;">ZIFLOW</span>
+      </div>
+      <div data-id="assetcentral" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:1042px; width:390px; height:60px; box-sizing:border-box; border:1.6px solid rgba(166,230,53,0.55); border-radius:12px; background:linear-gradient(180deg,rgba(24,30,14,0.55),rgba(12,16,8,0.78)); cursor:pointer; padding:0 22px; display:flex; align-items:center; gap:12px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.assetcentral }};" style-hover="border-color:#c4f06a; box-shadow:0 0 0 1.5px #a6e635,0 0 38px -6px rgba(166,230,53,0.7); transform:scale(2); z-index:60;">
+        <span style="width:8px; height:8px; border-radius:2px; background:#a6e635;"></span>
+        <span style="font:600 18px/1 'Space Grotesk',sans-serif; letter-spacing:0.01em; color:#eaf0f5;">Asset Central</span>
+      </div>
+      <div data-id="clinch" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:1206px; width:390px; height:96px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.clinch }};" style-hover="border-color:#c4f06a; box-shadow:0 0 0 1.5px #a6e635,0 0 38px -6px rgba(166,230,53,0.7); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T2 · DISTRIBUTION</span>
+        <span style="font:600 21px/1.05 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Traffick</span>
+        <span style="font:600 14px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; color:#a6e635;">CLINCH</span>
+      </div>
+      <div data-id="t2final" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:1318px; width:390px; height:96px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.t2final }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T2 · ARCHIVE</span>
+        <span style="font:600 21px/1.05 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Final Asset — DAM</span>
+        <span style="font:600 14px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; color:#f25cc1;">BYNDER</span>
+      </div>
+      <div data-id="insight" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:720px; top:1438px; width:865px; height:86px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 26px; display:flex; align-items:center; justify-content:space-between; gap:18px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.insight }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <div style="display:flex; flex-direction:column; gap:7px;">
+          <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">T2 · MEASUREMENT</span>
+          <span style="font:600 21px/1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Reactive Insight</span>
+        </div>
+        <span style="font:500 12px/1 'JetBrains Mono',monospace; letter-spacing:0.1em; color:#7e8a99;">BI-MONTHLY · CADENCE TBD</span>
+      </div>
+
+      <!-- ===== TS lane ===== -->
+      <div data-id="social" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:1185px; top:300px; width:400px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:8px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.social }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">TS · HUMAN</span>
+        <span style="font:600 22px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Social Strategy</span>
+      </div>
+      <div data-id="content" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:1185px; top:452px; width:400px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:8px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.content }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">TS · CRAFT</span>
+        <span style="font:600 22px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Content Creation</span>
+      </div>
+      <div data-id="community" onMouseEnter="{{ onEnter }}" onMouseLeave="{{ onLeave }}" style="position:absolute; left:1185px; top:604px; width:400px; height:118px; box-sizing:border-box; border:1.6px solid rgba(63,224,216,0.5); border-radius:14px; background:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82)); cursor:pointer; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:8px; transition:box-shadow .45s ease,border-color .25s ease,transform .28s cubic-bezier(.2,.7,.2,1); box-shadow:{{ glow.community }};" style-hover="border-color:#7af0ea; box-shadow:0 0 0 1.5px #3fe0d8,0 0 38px -6px rgba(63,224,216,0.75); transform:scale(2); z-index:60;">
+        <span style="font:500 11.5px/1 'JetBrains Mono',monospace; letter-spacing:0.15em; color:#647284;">TS · DELIVERY</span>
+        <span style="font:600 22px/1.1 'Space Grotesk',sans-serif; letter-spacing:-0.01em; color:#eaf0f5;">Community Mgmt</span>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { hoveredId: null, hoverRect: null, step: -1, playing: false };
+  boardRef = React.createRef();
+  wrapRef = React.createRef();
+  order = [
+    ['gm','brief','smartsheet'],
+    ['preprod','dco','social'],
+    ['shoot','figma','content'],
+    ['post','celtra','community'],
+    ['t1dam','t2dam','ziflow'],
+    ['assetcentral','clinch','t2final'],
+    ['insight'],
+  ];
+  phaseNames = ['CLIENT BRIEF','HUMAN','CRAFT','DELIVERY','CONSOLIDATE','APPROVE & ROUTE','MEASURE & LOOP'];
+  lime = new Set(['ziflow','assetcentral','clinch']);
+  details = {
+    gm:{eyebrow:'CLIENT',title:'General Motors',body:'Brand & marketing leadership. Originates campaign intent and signs off on creative direction.',lane:'Client',phase:'Origin'},
+    brief:{eyebrow:'ENTRY POINT',title:'Client Brief',body:'The approved brief — objectives, audience, deliverables and timing. The single source of truth that starts every lane.',lane:'All tiers',phase:'Kickoff'},
+    smartsheet:{eyebrow:'ORCHESTRATION',title:'Smartsheet',body:'Program orchestration. Every task, owner, dependency and date across all three tiers lives in one connected workspace.',tool:'SMARTSHEET',tone:'magenta',lane:'All tiers',phase:'Always-on'},
+    preprod:{eyebrow:'T1 · HUMAN',title:'Pre-Production',body:'Concept, casting, locations, scheduling and budget for hero film and key art.',lane:'Tier 1',phase:'Human'},
+    shoot:{eyebrow:'T1 · CRAFT',title:'Shoot',body:'Principal photography and film capture of the hero assets.',lane:'Tier 1',phase:'Craft'},
+    post:{eyebrow:'T1 · DELIVERY',title:'Post',body:'Edit, color, sound and finishing of hero film and key art.',lane:'Tier 1',phase:'Delivery'},
+    t1dam:{eyebrow:'T1 · ARCHIVE',title:'Final Assets — DAM',body:'Master hero assets ingested and version-controlled for reuse downstream.',tool:'BYNDER',tone:'magenta',lane:'Tier 1',phase:'Delivery'},
+    dco:{eyebrow:'T2 · HUMAN',title:'DCO Pipeline',body:'Dynamic Creative Optimization plan — audiences, variants, feed logic and the creative matrix.',lane:'Tier 2',phase:'Human'},
+    figma:{eyebrow:'T2 · CRAFT',title:'Asset Creation',body:'Modular master templates and components built for scale.',tool:'FIGMA',tone:'magenta',lane:'Tier 2',phase:'Craft'},
+    celtra:{eyebrow:'T2 · DELIVERY',title:'Scale Adaptation',body:'Mass versioning and sizing across formats and markets.',tool:'CELTRA',tone:'magenta',lane:'Tier 2',phase:'Delivery'},
+    t2dam:{eyebrow:'T2 · HANDOFF',title:'DAM Delivery',body:'Adapted variants delivered to the DAM and routed for review — in-flight handoff.',tool:'BYNDER',tone:'magenta',lane:'Tier 2',phase:'Delivery'},
+    ziflow:{eyebrow:'T2 · REVIEW',title:'Legal Review & Feedback Loop',body:'Automated proofing with legal and brand review, plus structured revision rounds.',tool:'ZIFLOW',tone:'lime',lane:'Tier 2',phase:'Review'},
+    assetcentral:{eyebrow:'T2 · HUB',title:'Asset Central',body:'The single approved-asset hub that feeds every downstream channel.',lane:'Tier 2',phase:'Hub'},
+    clinch:{eyebrow:'T2 · DISTRIBUTION',title:'Traffick',body:'Trafficking and dynamic ad serving of approved variants.',tool:'CLINCH',tone:'lime',lane:'Tier 2',phase:'Distribute'},
+    t2final:{eyebrow:'T2 · ARCHIVE',title:'Final Asset — DAM',body:'Final approved scale assets archived for the record.',tool:'BYNDER',tone:'magenta',lane:'Tier 2',phase:'Delivery'},
+    insight:{eyebrow:'T2 · MEASUREMENT',title:'Reactive Insight',body:'Performance read-outs loop back into the next cycle. Bi-monthly cadence (TBD).',lane:'Tier 2',phase:'Measure'},
+    social:{eyebrow:'TS · HUMAN',title:'Social Strategy',body:'Channel strategy, content pillars and the always-on calendar.',lane:'Tier Social',phase:'Human'},
+    content:{eyebrow:'TS · CRAFT',title:'Content Creation',body:'Native social content and rapid-turn creative.',lane:'Tier Social',phase:'Craft'},
+    community:{eyebrow:'TS · DELIVERY',title:'Community Management',body:'Publishing, engagement and community response.',lane:'Tier Social',phase:'Delivery'},
+  };
+
+  componentDidMount(){
+    this.fit();
+    requestAnimationFrame(this.fit);
+    [120, 350, 700].forEach(t => setTimeout(this.fit, t));
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(this.fit);
+    window.addEventListener('resize', this.fit);
+  }
+  componentWillUnmount(){
+    window.removeEventListener('resize', this.fit);
+    if(this.timer) clearInterval(this.timer);
+  }
+
+  fit = () => {
+    const wrap = this.wrapRef.current, board = this.boardRef.current;
+    if(!wrap || !board) return;
+    const w = wrap.clientWidth;
+    const s = Math.min((w - 8) / 1660, 1);
+    board.style.transformOrigin = 'top left';
+    board.style.transform = 'scale(' + s + ')';
+    board.style.marginLeft = Math.max(0, (w - 1660 * s) / 2) + 'px';
+    wrap.style.height = (1560 * s + 8) + 'px';
+  };
+
+  onEnter = (e) => {
+    const el = e.currentTarget;
+    if(el.dataset.bg0 === undefined) el.dataset.bg0 = el.style.background;
+    el.style.transformOrigin = 'center center';
+    el.style.transform = 'scale(2)';
+    el.style.zIndex = '60';
+    el.style.background = 'linear-gradient(180deg,#0f1822,#0a0f16)';
+  };
+  onLeave = (e) => {
+    const el = e.currentTarget;
+    el.style.transform = '';
+    el.style.zIndex = '';
+    el.style.background = el.dataset.bg0 || '';
+  };
+
+  togglePlay = () => {
+    if(this.state.playing){
+      if(this.timer) clearInterval(this.timer);
+      this.setState({ playing:false, step:-1 });
+      return;
+    }
+    this.setState({ playing:true, step:0 });
+    this.timer = setInterval(() => {
+      this.setState(s => {
+        if(s.step >= this.order.length - 1){ clearInterval(this.timer); this.timer=null; return null; }
+        return { step: s.step + 1 };
+      });
+    }, 1500);
+  };
+
+  renderVals(){
+    const S = this.state;
+    const BC = '0 0 0 2px #3fe0d8, 0 0 36px -4px rgba(63,224,216,0.9), inset 0 0 30px -14px rgba(63,224,216,0.65)';
+    const BL = '0 0 0 2px #a6e635, 0 0 36px -4px rgba(166,230,53,0.85), inset 0 0 30px -14px rgba(166,230,53,0.6)';
+    const SC = '0 0 0 1px rgba(63,224,216,0.45), 0 0 16px -8px rgba(63,224,216,0.5)';
+    const SL = '0 0 0 1px rgba(166,230,53,0.45), 0 0 16px -8px rgba(166,230,53,0.5)';
+
+    const glow = {};
+    const ids = ['gm','brief','smartsheet','preprod','shoot','post','t1dam','dco','figma','celtra','t2dam','ziflow','assetcentral','clinch','t2final','insight','social','content','community','phHuman','phCraft','phDelivery'];
+    ids.forEach(id => glow[id] = '');
+
+    if(S.playing && S.step >= 0){
+      this.order.forEach((grp, i) => {
+        grp.forEach(id => {
+          const isLime = this.lime.has(id);
+          if(S.step === i) glow[id] = isLime ? BL : BC;
+          else if(S.step > i) glow[id] = isLime ? SL : SC;
+        });
+      });
+      if(S.step >= 1) glow.phHuman = S.step === 1 ? BC : SC;
+      if(S.step >= 2) glow.phCraft = S.step === 2 ? BC : SC;
+      if(S.step >= 3) glow.phDelivery = S.step === 3 ? BC : SC;
+    }
+
+    const d = S.hoveredId ? this.details[S.hoveredId] : null;
+    const r = S.hoverRect;
+    let hover = { visible:false, left:0, top:0, eyebrow:'', title:'', body:'', tool:'', toolColor:'#f25cc1', lane:'', phase:'', hasTool:false };
+    if(d && r){
+      const cardW = 340;
+      const vw = window.innerWidth, vh = window.innerHeight;
+      let left = r.right + 18;
+      if(left + cardW > vw - 12) left = r.left - cardW - 18;
+      if(left < 12) left = 12;
+      let top = r.top;
+      if(top + 280 > vh - 12) top = Math.max(12, vh - 292);
+      hover = { visible:true, left, top, eyebrow:d.eyebrow, title:d.title, body:d.body, tool:d.tool||'', toolColor: d.tone==='lime' ? '#a6e635' : '#f25cc1', lane:d.lane, phase:d.phase, hasTool: !!d.tool };
+    }
+
+    return {
+      glow,
+      wrapRef: this.wrapRef,
+      boardRef: this.boardRef,
+      onEnter: this.onEnter,
+      onLeave: this.onLeave,
+      togglePlay: this.togglePlay,
+      playLabel: S.playing ? '\u25A0  Reset' : '\u25B6  Run flow',
+      phaseText: (S.playing && S.step >= 0) ? ('PHASE ' + (S.step+1) + '/7 — ' + this.phaseNames[S.step]) : 'HOVER ANY STEP FOR DETAIL',
+      hover,
+      hoverVisible: hover.visible,
+    };
+  }
+}
+</script>
+</body>
+</html>

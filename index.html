@@ -9,22 +9,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cyan:#3fe0d8; --cyan-bright:#7af0ea;
-    --magenta:#f25cc1; --orchid:#c569cf; --chip-label:#d68fdc;
-    --lime:#a6e635; --lime-bright:#c4f06a;
-    --text:#eaf0f5; --text-strong:#f4f8fb;
-    --muted:#7e8a99; --faint:#647284; --faint2:#5b6675;
-    --card-bg:linear-gradient(180deg,rgba(17,26,35,0.6),rgba(9,14,20,0.82));
-    --card-bg-solid:linear-gradient(180deg,#0f1822,#0a0f16);
+    /* --- themable palette (hex + space-separated rgb channels) --- */
+    --cyan:#3fe0d8;             --cyan-rgb:63 224 216;
+    --cyan-bright:#7af0ea;      --cyan-bright-rgb:122 240 234;
+    --magenta:#f25cc1;          --magenta-rgb:242 92 193;
+    --orchid:#c569cf;           --orchid-rgb:197 105 207;
+    --chip-label:#d68fdc;       --chip-label-rgb:214 143 220;
+    --lime:#a6e635;             --lime-rgb:166 230 53;
+    --lime-bright:#c4f06a;      --lime-bright-rgb:196 240 106;
+    --connector:#5fd8cf;        --connector-rgb:95 216 207;
+    --text:#eaf0f5;             --text-rgb:234 240 245;
+    --text-strong:#f4f8fb;      --text-strong-rgb:244 248 251;
+    --muted:#7e8a99;            --muted-rgb:126 138 153;
+    --faint:#647284;            --faint-rgb:100 114 132;
+    --faint2:#5b6675;           --faint2-rgb:91 102 117;
+    --rail:#d6efec;             --rail-rgb:214 239 236;
+    --legend:#8c97a8;           --legend-rgb:140 151 168;
+    --page-glow:#0d1825;        --page-glow-rgb:13 24 37;
+    --page-base:#06090f;        --page-base-rgb:6 9 15;
+    --header-top:#090f17;       --header-top-rgb:9 15 23;
+    --header-bottom:#080d14;    --header-bottom-rgb:8 13 20;
+    --card-top:#111a23;         --card-top-rgb:17 26 35;
+    --card-bottom:#090e14;      --card-bottom-rgb:9 14 20;
+    --card-solid-top:#0f1822;   --card-solid-top-rgb:15 24 34;
+    --card-solid-bottom:#0a0f16;--card-solid-bottom-rgb:10 15 22;
+
     --mono:'JetBrains Mono',ui-monospace,monospace;
     --display:'Space Grotesk',system-ui,sans-serif;
   }
 
   *{ margin:0; padding:0; box-sizing:border-box; }
-  html,body{ background:#06090f; }
+  html,body{ background:var(--page-base); }
   body{
     min-height:100vh;
-    background:radial-gradient(120% 80% at 50% -10%, #0d1825 0%, #06090f 55%, #04060a 100%);
+    background:radial-gradient(120% 80% at 50% -10%, var(--page-glow) 0%, var(--page-base) 55%, var(--page-base) 100%);
     color:var(--text);
     font-family:var(--display);
     overflow-x:hidden;
@@ -39,7 +57,7 @@
     gap:28px; flex-wrap:wrap;
     padding:22px 36px 18px;
     border-bottom:1px solid rgba(255,255,255,0.07);
-    background:linear-gradient(180deg, #090f17 0%, #080d14 75%, rgba(8,13,20,0.92) 100%);
+    background:linear-gradient(180deg, var(--header-top) 0%, var(--header-bottom) 75%, rgb(var(--header-bottom-rgb)/0.92) 100%);
     backdrop-filter:blur(8px);
   }
   .eyebrow-top{ font:500 12px/1 var(--mono); letter-spacing:0.22em; color:var(--cyan); }
@@ -49,7 +67,7 @@
   .header-right{ display:flex; align-items:center; gap:26px; flex-wrap:wrap; }
   .legend{ display:flex; flex-direction:column; gap:8px; }
   .legend-row{ display:flex; gap:16px; align-items:center; }
-  .legend-item{ display:flex; align-items:center; gap:7px; font:500 11px/1 var(--mono); letter-spacing:0.08em; color:#8c97a8; }
+  .legend-item{ display:flex; align-items:center; gap:7px; font:500 11px/1 var(--mono); letter-spacing:0.08em; color:var(--legend); }
   .swatch{ width:11px; height:11px; border-radius:3px; }
   .swatch--stage{ border:1.5px solid var(--cyan); }
   .swatch--platform{ background:var(--magenta); }
@@ -61,50 +79,54 @@
   .run-btn{
     font:600 13px/1 var(--mono); letter-spacing:0.1em; color:#04110f;
     background:var(--cyan); border:none; border-radius:10px; padding:13px 22px;
-    cursor:pointer; box-shadow:0 0 26px -6px rgba(63,224,216,0.7); transition:background .2s;
+    cursor:pointer; box-shadow:0 0 26px -6px rgb(var(--cyan-rgb)/0.7); transition:background .2s;
   }
   .run-btn:hover{ background:var(--cyan-bright); }
 
   /* ---------- Board ---------- */
   .wrap{
     position:relative; width:100%;
-    display:flex; justify-content:center; align-items:flex-start;
+    display:flex; justify-content:flex-start; align-items:flex-start;
     overflow:hidden; padding-top:8px;
   }
-  .board{ position:relative; width:1660px; height:1560px; transform-origin:top left; }
+  .board{ position:relative; flex:0 0 auto; width:1660px; height:1560px; transform-origin:top left; }
 
   .container-frame{
     position:absolute; left:170px; top:212px; width:1455px; height:1330px;
-    border:1.5px solid rgba(197,105,207,0.45); border-radius:22px;
-    background:radial-gradient(120% 60% at 50% 0%, rgba(197,105,207,0.05), rgba(255,255,255,0.008) 60%);
+    border:1.5px solid rgb(var(--orchid-rgb)/0.45); border-radius:22px;
+    background:radial-gradient(120% 60% at 50% 0%, rgb(var(--orchid-rgb)/0.05), rgba(255,255,255,0.008) 60%);
     pointer-events:none;
   }
 
   .connectors{ position:absolute; left:0; top:0; width:1660px; height:1560px; overflow:visible; pointer-events:none; }
-  .connectors path.flow{ animation:flow 6s linear infinite; }
-  .connectors path.flow-fast{ animation:flow 5s linear infinite; }
+  .connectors .ln{ stroke:var(--connector); fill:none; stroke-dasharray:7 7; }
+  .connectors .arrow{ stroke:var(--connector); fill:none; }
+  .connectors .tri{ fill:var(--lime); }
+  .connectors .flow{ animation:flow 6s linear infinite; }
+  .connectors .flow-fast{ animation:flow 5s linear infinite; }
 
   /* column headers */
   .col-head{ position:absolute; top:244px; display:flex; align-items:baseline; gap:11px; }
   .col-code{ font:700 19px/1 var(--display); letter-spacing:0.02em; color:var(--cyan); }
-  .col-desc{ font:400 13px/1 var(--display); color:var(--muted); }
+  .col-desc{ font:400 13px/1 var(--display); color:var(--muted); white-space:nowrap; }
 
   /* phase rail */
   .rail{
     position:absolute; left:22px; width:150px;
     display:flex; flex-direction:column; gap:4px;
     padding:10px 14px;
-    border-left:2px solid rgba(63,224,216,0.5); border-radius:0 9px 9px 0;
+    border-left:2px solid rgb(var(--cyan-rgb)/0.5); border-radius:0 9px 9px 0;
     box-shadow:var(--glow,none); transition:box-shadow .4s ease;
   }
-  .rail-label{ font:700 18px/1 var(--display); letter-spacing:0.08em; color:#d6efec; }
+  .rail-label{ font:700 18px/1 var(--display); letter-spacing:0.08em; color:var(--rail); }
   .rail-sub{ font:500 10.5px/1.3 var(--mono); letter-spacing:0.05em; color:var(--faint); }
 
   /* ---------- Nodes ---------- */
   .node{
     position:absolute; box-sizing:border-box; cursor:pointer;
-    border:1.6px solid rgba(63,224,216,0.5); border-radius:14px;
-    --bg:var(--card-bg); background:var(--bg);
+    border:1.6px solid rgb(var(--cyan-rgb)/0.5); border-radius:14px;
+    --bg:linear-gradient(180deg, rgb(var(--card-top-rgb)/0.6), rgb(var(--card-bottom-rgb)/0.82));
+    background:var(--bg);
     box-shadow:var(--glow,none);
     transform-origin:center center;
     transition:box-shadow .45s ease, border-color .25s ease,
@@ -113,28 +135,28 @@
   .node:hover{
     transform:scale(2); z-index:60;
     border-color:var(--cyan-bright);
-    background:var(--card-bg-solid);
-    box-shadow:0 0 0 1.5px var(--cyan), 0 0 38px -6px rgba(63,224,216,0.75);
+    background:linear-gradient(180deg, var(--card-solid-top), var(--card-solid-bottom));
+    box-shadow:0 0 0 1.5px var(--cyan), 0 0 38px -6px rgb(var(--cyan-rgb)/0.75);
   }
   .node--limeglow:hover{
     border-color:var(--lime-bright);
-    box-shadow:0 0 0 1.5px var(--lime), 0 0 38px -6px rgba(166,230,53,0.7);
+    box-shadow:0 0 0 1.5px var(--lime), 0 0 38px -6px rgb(var(--lime-rgb)/0.7);
   }
   .node--dashed{
-    border-style:dashed; border-color:rgba(63,224,216,0.45);
-    --bg:linear-gradient(180deg,rgba(17,26,35,0.4),rgba(9,14,20,0.6));
+    border-style:dashed; border-color:rgb(var(--cyan-rgb)/0.45);
+    --bg:linear-gradient(180deg, rgb(var(--card-top-rgb)/0.4), rgb(var(--card-bottom-rgb)/0.6));
   }
   .node--hub{
-    border-color:rgba(166,230,53,0.55); border-radius:12px;
-    --bg:linear-gradient(180deg,rgba(24,30,14,0.55),rgba(12,16,8,0.78));
+    border-color:rgb(var(--lime-rgb)/0.55); border-radius:12px;
+    --bg:linear-gradient(180deg, rgb(var(--lime-rgb)/0.10), rgba(10,13,7,0.8));
   }
   .node--chip{
-    border:1.4px solid rgba(197,105,207,0.55); border-radius:10px;
-    --bg:linear-gradient(180deg,rgba(30,18,32,0.7),rgba(14,10,18,0.85));
+    border:1.4px solid rgb(var(--orchid-rgb)/0.55); border-radius:10px;
+    --bg:linear-gradient(180deg, rgb(var(--orchid-rgb)/0.12), rgba(14,10,18,0.85));
   }
   .node--chip:hover{
-    border-color:#dd8ae3;
-    box-shadow:0 0 0 1.5px var(--orchid), 0 0 30px -6px rgba(197,105,207,0.6);
+    border-color:var(--chip-label);
+    box-shadow:0 0 0 1.5px var(--orchid), 0 0 30px -6px rgb(var(--orchid-rgb)/0.6);
   }
 
   /* card inner layouts */
@@ -166,33 +188,98 @@
   .col-l{ display:flex; flex-direction:column; gap:7px; }
 
   @media (prefers-reduced-motion: reduce){
-    .connectors path{ animation:none !important; }
+    .connectors .flow, .connectors .flow-fast{ animation:none !important; }
     .node{ transition:box-shadow .2s ease, border-color .2s ease, background .2s ease; }
     .node:hover{ transform:scale(1.04); }
   }
+
+  /* ===================================================================
+     CMS editor panel — chrome uses fixed colors (independent of the
+     themable palette) so it stays legible whatever the user picks.
+     =================================================================== */
+  .cms-toggle{
+    position:fixed; right:18px; bottom:18px; z-index:80;
+    font:600 12px/1 var(--mono); letter-spacing:0.08em; color:#04110f;
+    background:#3fe0d8; border:none; border-radius:999px; padding:12px 18px;
+    cursor:pointer; box-shadow:0 6px 24px -8px rgba(0,0,0,0.7);
+  }
+  .cms{
+    position:fixed; top:0; right:0; height:100vh; width:380px; max-width:94vw; z-index:90;
+    transform:translateX(100%); transition:transform .3s cubic-bezier(.2,.7,.2,1);
+    background:#0b0f15; border-left:1px solid rgba(255,255,255,0.12);
+    display:flex; flex-direction:column; color:#e6edf3; font-family:var(--mono);
+    box-shadow:-20px 0 60px -30px rgba(0,0,0,0.9);
+  }
+  .cms.open{ transform:none; }
+  .cms-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px; border-bottom:1px solid rgba(255,255,255,0.1);
+  }
+  .cms-head h2{ font:600 14px/1 var(--mono); letter-spacing:0.1em; color:#fff; }
+  .cms-head .sub{ font:400 10px/1.4 var(--mono); color:#7c8794; margin-top:5px; letter-spacing:0.04em; }
+  .cms-x{ background:none; border:none; color:#9aa6b2; font-size:20px; cursor:pointer; line-height:1; padding:4px; }
+  .cms-body{ flex:1; overflow-y:auto; padding:8px 14px 20px; }
+  .cms details{ border-bottom:1px solid rgba(255,255,255,0.07); }
+  .cms summary{
+    cursor:pointer; padding:12px 4px; font:600 12px/1 var(--mono);
+    letter-spacing:0.08em; color:#bcd; list-style:none; display:flex; align-items:center; gap:8px;
+  }
+  .cms summary::-webkit-details-marker{ display:none; }
+  .cms summary::before{ content:'▸'; color:#5b6675; font-size:10px; transition:transform .15s; }
+  .cms details[open] > summary::before{ transform:rotate(90deg); }
+  .cms .sub-node{ border:none; margin-left:6px; }
+  .cms .sub-node > summary{ color:#8fa0b0; font-weight:500; font-size:11px; padding:8px 4px; }
+  .cms .grp{ padding:4px 4px 12px; }
+  .cms .grp-title{ font:600 10px/1 var(--mono); letter-spacing:0.14em; color:#6b7785; margin:12px 4px 8px; text-transform:uppercase; }
+  .fld{ margin:0 0 9px; }
+  .fld label{ display:block; font:500 10px/1.3 var(--mono); letter-spacing:0.04em; color:#8b97a4; margin-bottom:4px; }
+  .fld input[type=text]{
+    width:100%; background:#11161e; border:1px solid rgba(255,255,255,0.12); border-radius:7px;
+    color:#e6edf3; font:400 12px/1.3 var(--mono); padding:8px 10px;
+  }
+  .fld input[type=text]:focus{ outline:none; border-color:#3fe0d8; }
+  .fld.color{ display:flex; align-items:center; gap:10px; margin-bottom:7px; }
+  .fld.color label{ flex:1; margin:0; }
+  .fld.color input[type=color]{
+    width:34px; height:26px; padding:0; border:1px solid rgba(255,255,255,0.18);
+    border-radius:6px; background:none; cursor:pointer;
+  }
+  .fld.color .hex{ font:400 10px/1 var(--mono); color:#6b7785; width:62px; text-align:right; }
+  .cms-foot{
+    display:flex; flex-wrap:wrap; gap:8px; padding:14px 16px;
+    border-top:1px solid rgba(255,255,255,0.1); background:#090d12;
+  }
+  .cms-btn{
+    flex:1; min-width:96px; font:600 11px/1 var(--mono); letter-spacing:0.06em;
+    padding:10px 12px; border-radius:8px; cursor:pointer; border:1px solid rgba(255,255,255,0.15);
+    background:#161c25; color:#dbe4ec;
+  }
+  .cms-btn.primary{ background:#3fe0d8; color:#04110f; border-color:#3fe0d8; }
+  .cms-btn.danger{ color:#ff9d9d; border-color:rgba(255,120,120,0.35); }
+  .cms-btn:hover{ filter:brightness(1.12); }
 </style>
 </head>
 <body>
 
   <header class="header">
     <div>
-      <div class="eyebrow-top">GM · MARKETING OPERATING MODEL</div>
-      <h1 class="h1">Creative Production Pipeline</h1>
-      <div class="subtitle">Tier 1 · Tier 2 · Tier Social — three lanes, running in parallel</div>
+      <div class="eyebrow-top" id="eyebrowTop"></div>
+      <h1 class="h1" id="h1Title"></h1>
+      <div class="subtitle" id="subtitle"></div>
     </div>
     <div class="header-right">
       <div class="legend">
         <div class="legend-row">
-          <div class="legend-item"><span class="swatch swatch--stage"></span>Stage</div>
-          <div class="legend-item"><span class="swatch swatch--platform"></span>Platform</div>
-          <div class="legend-item"><span class="swatch swatch--automation"></span>Automation</div>
+          <div class="legend-item"><span class="swatch swatch--stage"></span><span id="legStage"></span></div>
+          <div class="legend-item"><span class="swatch swatch--platform"></span><span id="legPlatform"></span></div>
+          <div class="legend-item"><span class="swatch swatch--automation"></span><span id="legAutomation"></span></div>
         </div>
-        <div class="legend-note">— — —&nbsp;&nbsp;dashed = asset / data flow</div>
+        <div class="legend-note" id="legNote"></div>
       </div>
       <div class="divider"></div>
       <div class="controls">
-        <div class="phase-text" id="phaseText">HOVER ANY STEP FOR DETAIL</div>
-        <button class="run-btn" id="runBtn" type="button">▶&nbsp;&nbsp;Run flow</button>
+        <div class="phase-text" id="phaseText"></div>
+        <button class="run-btn" id="runBtn" type="button"></button>
       </div>
     </div>
   </header>
@@ -205,48 +292,58 @@
       <svg class="connectors" viewBox="0 0 1660 1560" aria-hidden="true">
         <defs>
           <marker id="arC" markerWidth="12" markerHeight="12" refX="7" refY="5" orient="auto" markerUnits="userSpaceOnUse">
-            <path d="M1,1 L8,5 L1,9" fill="none" stroke="#5fd8cf" stroke-width="1.5"></path>
+            <path class="arrow" d="M1,1 L8,5 L1,9" stroke-width="1.5"></path>
           </marker>
         </defs>
-        <path class="flow" d="M132,99 L596,100" fill="none" stroke="#4fc8c0" stroke-width="1.6" stroke-dasharray="7 7" marker-end="url(#arC)"></path>
-        <path class="flow" d="M950,146 L950,205" fill="none" stroke="#4fc8c0" stroke-width="1.6" stroke-dasharray="7 7" marker-end="url(#arC)"></path>
-        <path class="flow-fast" d="M625,815 L674,815 L674,514 L714,514" fill="none" stroke="#5fd8cf" stroke-width="1.7" stroke-dasharray="7 7" marker-end="url(#arC)"></path>
-        <polygon points="674,540 668,552 680,552" fill="#a6e635"></polygon>
-        <path class="flow-fast" d="M1110,664 L1150,664 L1150,514 L1179,514" fill="none" stroke="#5fd8cf" stroke-width="1.7" stroke-dasharray="7 7" marker-end="url(#arC)"></path>
-        <polygon points="1150,540 1144,552 1156,552" fill="#a6e635"></polygon>
+        <path class="ln flow" d="M132,99 L596,100" stroke-width="1.6" marker-end="url(#arC)"></path>
+        <path class="ln flow" d="M950,146 L950,205" stroke-width="1.6" marker-end="url(#arC)"></path>
+        <path class="ln flow-fast" d="M625,815 L674,815 L674,514 L714,514" stroke-width="1.7" marker-end="url(#arC)"></path>
+        <polygon class="tri" points="674,540 668,552 680,552"></polygon>
+        <path class="ln flow-fast" d="M1110,664 L1150,664 L1150,514 L1179,514" stroke-width="1.7" marker-end="url(#arC)"></path>
+        <polygon class="tri" points="1150,540 1144,552 1156,552"></polygon>
       </svg>
 
-      <!-- column headers -->
-      <div class="col-head" style="left:235px"><span class="col-code">T1</span><span class="col-desc">Tier 1 · Traditional Advertising</span></div>
-      <div class="col-head" style="left:720px"><span class="col-code">T2</span><span class="col-desc">Tier 2 · DCO · Scale Media</span></div>
-      <div class="col-head" style="left:1185px"><span class="col-code">TS</span><span class="col-desc">Tier Social · Social</span></div>
-
-      <!-- phase rail -->
-      <div class="rail" id="phHuman" style="top:330px"><span class="rail-label">HUMAN</span><span class="rail-sub">Strategy &amp; planning</span></div>
-      <div class="rail" id="phCraft" style="top:482px"><span class="rail-label">CRAFT</span><span class="rail-sub">Make the work</span></div>
-      <div class="rail" id="phDelivery" style="top:634px"><span class="rail-label">DELIVERY</span><span class="rail-sub">Ship &amp; run</span></div>
-
-      <!-- nodes injected here -->
+      <!-- columns, phase rail, and nodes are injected by JS -->
     </div>
   </div>
+
+  <button class="cms-toggle" id="cmsToggle" type="button">⚙&nbsp;&nbsp;Edit page</button>
+
+  <aside class="cms" id="cms" aria-hidden="true">
+    <div class="cms-head">
+      <div>
+        <h2>PAGE EDITOR</h2>
+        <div class="sub">Text &amp; colors · saved in this browser</div>
+      </div>
+      <button class="cms-x" id="cmsClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="cms-body" id="cmsBody"></div>
+    <div class="cms-foot">
+      <button class="cms-btn primary" id="cmsExport" type="button">Export JSON</button>
+      <button class="cms-btn" id="cmsImport" type="button">Import JSON</button>
+      <button class="cms-btn danger" id="cmsReset" type="button">Reset</button>
+      <input type="file" id="cmsFile" accept="application/json,.json" hidden>
+    </div>
+  </aside>
 
 <script>
 (function(){
   "use strict";
 
-  // ----- node model -----
+  /* ============================================================
+     STRUCTURE — fixed geometry / kind / classes for each node.
+     Editable copy (text) lives in state.nodes, keyed by id.
+     ============================================================ */
   var NODES = [
-    { id:'gm',           l:40,   t:64,   w:92,  h:72,  kind:'gm' },
-    { id:'brief',        l:600,  t:58,   w:700, h:88,  kind:'entry', eyebrow:'ENTRY POINT', title:'CLIENT BRIEF' },
-    { id:'smartsheet',   l:188,  t:178,           kind:'chip', cls:'node--chip', label:'SMARTSHEET' },
+    { id:'gm',         l:40,   t:64,   w:92,  h:72,  kind:'gm' },
+    { id:'brief',      l:600,  t:58,   w:700, h:88,  kind:'entry', eyebrow:'ENTRY POINT', title:'CLIENT BRIEF' },
+    { id:'smartsheet', l:188,  t:178,           kind:'chip', cls:'node--chip', label:'SMARTSHEET' },
 
-    // T1
     { id:'preprod',  l:235, t:300, w:390, h:118, eyebrow:'T1 · HUMAN',     title:'Pre-Production' },
     { id:'shoot',    l:235, t:452, w:390, h:118, eyebrow:'T1 · CRAFT',     title:'Shoot' },
     { id:'post',     l:235, t:604, w:390, h:118, eyebrow:'T1 · DELIVERY',  title:'Post' },
     { id:'t1dam',    l:235, t:756, w:390, h:118, eyebrow:'T1 · ARCHIVE',   title:'Final Assets — DAM', tSize:'title--sm', tag:'BYNDER', tagTone:'magenta' },
 
-    // T2
     { id:'dco',      l:720, t:300,  w:390, h:118, eyebrow:'T2 · HUMAN',    title:'DCO Pipeline' },
     { id:'figma',    l:720, t:452,  w:390, h:118, eyebrow:'T2 · CRAFT',    title:'Asset Creation', tSize:'title--sm', tag:'FIGMA',  tagTone:'magenta' },
     { id:'celtra',   l:720, t:604,  w:390, h:118, eyebrow:'T2 · DELIVERY', title:'Scale Adaptation', tSize:'title--sm', tag:'CELTRA', tagTone:'magenta' },
@@ -257,62 +354,239 @@
     { id:'t2final',  l:720, t:1318, w:390, h:96,  eyebrow:'T2 · ARCHIVE',  title:'Final Asset — DAM', tSize:'title--sm', tag:'BYNDER', tagTone:'magenta' },
     { id:'insight',  l:720, t:1438, w:865, h:86,  kind:'wide', eyebrow:'T2 · MEASUREMENT', title:'Reactive Insight', tSize:'title--sm', meta:'BI-MONTHLY · CADENCE TBD' },
 
-    // TS
     { id:'social',    l:1185, t:300, w:400, h:118, eyebrow:'TS · HUMAN',    title:'Social Strategy' },
     { id:'content',   l:1185, t:452, w:400, h:118, eyebrow:'TS · CRAFT',    title:'Content Creation' },
     { id:'community', l:1185, t:604, w:400, h:118, eyebrow:'TS · DELIVERY', title:'Community Mgmt' }
   ];
 
-  function tagSpan(n){
-    var cls = 'tag tag--' + (n.tagTone || 'magenta') + (n.tagSm ? ' tag--sm' : '');
-    return '<span class="' + cls + '">' + n.tag + '</span>';
-  }
-  function titleSpan(n){
-    var cls = 'title' + (n.tSize ? ' ' + n.tSize : '');
-    return '<span class="' + cls + '">' + (n.titleHtml || n.title) + '</span>';
+  var COL_POS  = [235, 720, 1185];
+  var RAIL_IDS = ['phHuman', 'phCraft', 'phDelivery'];
+  var RAIL_TOP = [330, 482, 634];
+
+  /* ============================================================
+     DEFAULT CONTENT
+     ============================================================ */
+  var DEFAULT_COLORS = {
+    'cyan':'#3fe0d8', 'cyan-bright':'#7af0ea', 'magenta':'#f25cc1', 'orchid':'#c569cf',
+    'chip-label':'#d68fdc', 'lime':'#a6e635', 'lime-bright':'#c4f06a', 'connector':'#5fd8cf',
+    'text-strong':'#f4f8fb', 'text':'#eaf0f5', 'muted':'#7e8a99', 'faint':'#647284',
+    'faint2':'#5b6675', 'legend':'#8c97a8', 'rail':'#d6efec',
+    'page-glow':'#0d1825', 'page-base':'#06090f', 'header-top':'#090f17', 'header-bottom':'#080d14',
+    'card-top':'#111a23', 'card-bottom':'#090e14', 'card-solid-top':'#0f1822', 'card-solid-bottom':'#0a0f16'
+  };
+
+  var COLOR_GROUPS = [
+    { title:'Brand & accents', keys:[
+      ['cyan','Cyan — primary / stage'], ['cyan-bright','Cyan bright (hover)'],
+      ['magenta','Magenta — platform'], ['orchid','Orchid — Smartsheet / frame'],
+      ['chip-label','Smartsheet label text'], ['lime','Lime — automation'],
+      ['lime-bright','Lime bright (hover)'], ['connector','Connector / data-flow']
+    ]},
+    { title:'Text', keys:[
+      ['text-strong','Headings'], ['text','Card titles / body'], ['muted','Muted (subtitle, meta)'],
+      ['faint','Eyebrows / sub-labels'], ['faint2','Legend note'], ['legend','Legend labels'],
+      ['rail','Phase rail labels']
+    ]},
+    { title:'Surfaces & background', keys:[
+      ['page-glow','Page background — glow'], ['page-base','Page background — base'],
+      ['header-top','Header — top'], ['header-bottom','Header — bottom'],
+      ['card-top','Card fill — top'], ['card-bottom','Card fill — bottom'],
+      ['card-solid-top','Card hover — top'], ['card-solid-bottom','Card hover — bottom']
+    ]}
+  ];
+
+  var DEFAULT_TEXT = {
+    eyebrowTop:'GM · MARKETING OPERATING MODEL',
+    title:'Creative Production Pipeline',
+    subtitle:'Tier 1 · Tier 2 · Tier Social — three lanes, running in parallel',
+    legendStage:'Stage', legendPlatform:'Platform', legendAutomation:'Automation',
+    legendNote:'— — —  dashed = asset / data flow',
+    phaseIdle:'HOVER ANY STEP FOR DETAIL',
+    runLabel:'Run flow', resetLabel:'Reset',
+    cols:[
+      { code:'T1', desc:'Tier 1 · Traditional Advertising' },
+      { code:'T2', desc:'Tier 2 · DCO · Scale Media' },
+      { code:'TS', desc:'Tier Social · Social' }
+    ],
+    rails:[
+      { label:'HUMAN', sub:'Strategy & planning' },
+      { label:'CRAFT', sub:'Make the work' },
+      { label:'DELIVERY', sub:'Ship & run' }
+    ],
+    phaseNames:['CLIENT BRIEF','HUMAN','CRAFT','DELIVERY','CONSOLIDATE','APPROVE & ROUTE','MEASURE & LOOP']
+  };
+
+  function defaultNodeText(){
+    var o = {};
+    NODES.forEach(function(n){
+      o[n.id] = {
+        eyebrow: n.eyebrow || '', title: n.title || '', titleHtml: n.titleHtml || '',
+        tag: n.tag || '', meta: n.meta || '', label: n.label || ''
+      };
+    });
+    return o;
   }
 
-  function innerHtml(n){
+  function defaults(){
+    return {
+      colors: Object.assign({}, DEFAULT_COLORS),
+      text: JSON.parse(JSON.stringify(DEFAULT_TEXT)),
+      nodes: defaultNodeText()
+    };
+  }
+
+  /* ============================================================
+     STATE + persistence
+     ============================================================ */
+  var LS_KEY = 'gm-pipeline-cms-v1';
+
+  function deepMerge(base, over){
+    if(!over || typeof over !== 'object') return base;
+    Object.keys(over).forEach(function(k){
+      if(over[k] && typeof over[k] === 'object' && !Array.isArray(over[k]) &&
+         base[k] && typeof base[k] === 'object' && !Array.isArray(base[k])){
+        deepMerge(base[k], over[k]);
+      } else if(over[k] !== undefined){
+        base[k] = over[k];
+      }
+    });
+    return base;
+  }
+
+  function load(){
+    var s = defaults();
+    try{
+      var raw = localStorage.getItem(LS_KEY);
+      if(raw) deepMerge(s, JSON.parse(raw));
+    }catch(e){ /* ignore */ }
+    return s;
+  }
+  function persist(){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  var state = load();
+
+  /* ============================================================
+     COLOR application (sets hex + rgb-channel CSS vars)
+     ============================================================ */
+  function hexToChannels(hex){
+    var h = String(hex).replace('#','').trim();
+    if(h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    var n = parseInt(h, 16);
+    if(isNaN(n) || h.length !== 6) return '0 0 0';
+    return ((n>>16)&255) + ' ' + ((n>>8)&255) + ' ' + (n&255);
+  }
+  function applyColors(){
+    var root = document.documentElement;
+    Object.keys(state.colors).forEach(function(key){
+      var hex = state.colors[key];
+      root.style.setProperty('--' + key, hex);
+      root.style.setProperty('--' + key + '-rgb', hexToChannels(hex));
+    });
+  }
+
+  /* ============================================================
+     TEXT / board rendering
+     ============================================================ */
+  var board = document.getElementById('board');
+  var byId = {};
+
+  function tagSpan(n, txt){
+    var cls = 'tag tag--' + (n.tagTone || 'magenta') + (n.tagSm ? ' tag--sm' : '');
+    return '<span class="' + cls + '">' + esc(txt.tag) + '</span>';
+  }
+  function titleSpan(n, txt){
+    var cls = 'title' + (n.tSize ? ' ' + n.tSize : '');
+    var html = n.titleHtml ? txt.titleHtml : esc(txt.title);
+    return '<span class="' + cls + '">' + html + '</span>';
+  }
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function innerHtml(n, txt){
     switch(n.kind){
       case 'gm':
-        return '<div class="card card--center"><span class="gm-label">GM</span></div>';
+        return '<div class="card card--center"><span class="gm-label">' + esc(txt.title || 'GM') + '</span></div>';
       case 'entry':
         return '<div class="card card--entry">' +
-                 '<span class="eyebrow eyebrow--entry">' + n.eyebrow + '</span>' +
-                 '<span class="title title--entry">' + n.title + '</span></div>';
+                 '<span class="eyebrow eyebrow--entry">' + esc(txt.eyebrow) + '</span>' +
+                 '<span class="title title--entry">' + esc(txt.title) + '</span></div>';
       case 'chip':
         return '<div class="card card--chip"><span class="dot dot--chip"></span>' +
-                 '<span class="chip-label">' + n.label + '</span></div>';
+                 '<span class="chip-label">' + esc(txt.label) + '</span></div>';
       case 'hub':
         return '<div class="card card--hub"><span class="dot dot--hub"></span>' +
-                 '<span class="title title--hub">' + n.title + '</span></div>';
+                 '<span class="title title--hub">' + esc(txt.title) + '</span></div>';
       case 'wide':
         return '<div class="card card--row"><div class="col-l">' +
-                 '<span class="eyebrow">' + n.eyebrow + '</span>' + titleSpan(n) +
-                 '</div><span class="meta">' + n.meta + '</span></div>';
+                 '<span class="eyebrow">' + esc(txt.eyebrow) + '</span>' + titleSpan(n, txt) +
+                 '</div><span class="meta">' + esc(txt.meta) + '</span></div>';
       default:
-        return '<div class="card"><span class="eyebrow">' + n.eyebrow + '</span>' +
-                 titleSpan(n) + (n.tag ? tagSpan(n) : '') + '</div>';
+        return '<div class="card"><span class="eyebrow">' + esc(txt.eyebrow) + '</span>' +
+                 titleSpan(n, txt) + (n.tag ? tagSpan(n, txt) : '') + '</div>';
     }
   }
 
-  // ----- render nodes -----
-  var board = document.getElementById('board');
-  var byId = {};
-  NODES.forEach(function(n){
-    var el = document.createElement('div');
-    el.className = 'node' + (n.cls ? ' ' + n.cls : '');
-    el.dataset.id = n.id;
-    el.style.left = n.l + 'px';
-    el.style.top  = n.t + 'px';
-    if(n.w) el.style.width  = n.w + 'px';
-    if(n.h) el.style.height = n.h + 'px';
-    el.innerHTML = innerHtml(n);
-    board.appendChild(el);
-    byId[n.id] = el;
-  });
+  function buildBoard(){
+    // clear dynamic parts
+    Array.prototype.forEach.call(board.querySelectorAll('.node,.col-head,.rail'), function(el){ el.remove(); });
+    byId = {};
 
-  // ----- run-flow sequencing -----
+    // columns
+    state.text.cols.forEach(function(c, i){
+      var d = document.createElement('div');
+      d.className = 'col-head';
+      d.style.left = COL_POS[i] + 'px';
+      d.innerHTML = '<span class="col-code">' + esc(c.code) + '</span>' +
+                    '<span class="col-desc">' + esc(c.desc) + '</span>';
+      board.appendChild(d);
+    });
+
+    // phase rails
+    state.text.rails.forEach(function(r, i){
+      var d = document.createElement('div');
+      d.className = 'rail';
+      d.id = RAIL_IDS[i];
+      d.style.top = RAIL_TOP[i] + 'px';
+      d.innerHTML = '<span class="rail-label">' + esc(r.label) + '</span>' +
+                    '<span class="rail-sub">' + esc(r.sub) + '</span>';
+      board.appendChild(d);
+    });
+
+    // nodes
+    NODES.forEach(function(n){
+      var txt = state.nodes[n.id] || {};
+      var el = document.createElement('div');
+      el.className = 'node' + (n.cls ? ' ' + n.cls : '');
+      el.dataset.id = n.id;
+      el.style.left = n.l + 'px';
+      el.style.top  = n.t + 'px';
+      if(n.w) el.style.width  = n.w + 'px';
+      if(n.h) el.style.height = n.h + 'px';
+      el.innerHTML = innerHtml(n, txt);
+      board.appendChild(el);
+      byId[n.id] = el;
+    });
+  }
+
+  function applyHeader(){
+    var T = state.text;
+    setText('eyebrowTop', T.eyebrowTop);
+    setText('h1Title', T.title);
+    setText('subtitle', T.subtitle);
+    setText('legStage', T.legendStage);
+    setText('legPlatform', T.legendPlatform);
+    setText('legAutomation', T.legendAutomation);
+    setText('legNote', T.legendNote);
+  }
+  function setText(id, v){ var el = document.getElementById(id); if(el) el.textContent = v; }
+
+  /* ============================================================
+     Run-flow sequencing
+     ============================================================ */
   var ORDER = [
     ['gm','brief','smartsheet'],
     ['preprod','dco','social'],
@@ -322,22 +596,15 @@
     ['assetcentral','clinch','t2final'],
     ['insight']
   ];
-  var PHASE_NAMES = ['CLIENT BRIEF','HUMAN','CRAFT','DELIVERY','CONSOLIDATE','APPROVE & ROUTE','MEASURE & LOOP'];
   var LIME = { ziflow:1, assetcentral:1, clinch:1 };
 
-  var BC = '0 0 0 2px #3fe0d8, 0 0 36px -4px rgba(63,224,216,0.9), inset 0 0 30px -14px rgba(63,224,216,0.65)';
-  var BL = '0 0 0 2px #a6e635, 0 0 36px -4px rgba(166,230,53,0.85), inset 0 0 30px -14px rgba(166,230,53,0.6)';
-  var SC = '0 0 0 1px rgba(63,224,216,0.45), 0 0 16px -8px rgba(63,224,216,0.5)';
-  var SL = '0 0 0 1px rgba(166,230,53,0.45), 0 0 16px -8px rgba(166,230,53,0.5)';
+  var BC = '0 0 0 2px var(--cyan), 0 0 36px -4px rgb(var(--cyan-rgb)/0.9), inset 0 0 30px -14px rgb(var(--cyan-rgb)/0.65)';
+  var BL = '0 0 0 2px var(--lime), 0 0 36px -4px rgb(var(--lime-rgb)/0.85), inset 0 0 30px -14px rgb(var(--lime-rgb)/0.6)';
+  var SC = '0 0 0 1px rgb(var(--cyan-rgb)/0.45), 0 0 16px -8px rgb(var(--cyan-rgb)/0.5)';
+  var SL = '0 0 0 1px rgb(var(--lime-rgb)/0.45), 0 0 16px -8px rgb(var(--lime-rgb)/0.5)';
 
-  var rails = {
-    phHuman: document.getElementById('phHuman'),
-    phCraft: document.getElementById('phCraft'),
-    phDelivery: document.getElementById('phDelivery')
-  };
   var phaseText = document.getElementById('phaseText');
   var runBtn = document.getElementById('runBtn');
-
   var playing = false, step = -1, timer = null;
 
   function setGlow(el, val){
@@ -347,7 +614,7 @@
   }
   function clearAllGlows(){
     NODES.forEach(function(n){ setGlow(byId[n.id], ''); });
-    setGlow(rails.phHuman, ''); setGlow(rails.phCraft, ''); setGlow(rails.phDelivery, '');
+    RAIL_IDS.forEach(function(id){ setGlow(document.getElementById(id), ''); });
   }
 
   function render(){
@@ -360,34 +627,35 @@
           else if(step > i) setGlow(byId[id], lime ? SL : SC);
         });
       });
-      if(step >= 1) setGlow(rails.phHuman,    step === 1 ? BC : SC);
-      if(step >= 2) setGlow(rails.phCraft,    step === 2 ? BC : SC);
-      if(step >= 3) setGlow(rails.phDelivery, step === 3 ? BC : SC);
+      if(step >= 1) setGlow(document.getElementById('phHuman'),    step === 1 ? BC : SC);
+      if(step >= 2) setGlow(document.getElementById('phCraft'),    step === 2 ? BC : SC);
+      if(step >= 3) setGlow(document.getElementById('phDelivery'), step === 3 ? BC : SC);
     }
+    var names = state.text.phaseNames;
     phaseText.textContent = (playing && step >= 0)
-      ? ('PHASE ' + (step + 1) + '/7 — ' + PHASE_NAMES[step])
-      : 'HOVER ANY STEP FOR DETAIL';
-    runBtn.innerHTML = playing ? '■&nbsp;&nbsp;Reset' : '▶&nbsp;&nbsp;Run flow';
+      ? ('PHASE ' + (step + 1) + '/' + ORDER.length + ' — ' + (names[step] || ''))
+      : state.text.phaseIdle;
+    runBtn.textContent = playing
+      ? ('■  ' + state.text.resetLabel)
+      : ('▶  ' + state.text.runLabel);
   }
 
   function togglePlay(){
     if(playing){
       if(timer){ clearInterval(timer); timer = null; }
-      playing = false; step = -1;
-      render();
-      return;
+      playing = false; step = -1; render(); return;
     }
-    playing = true; step = 0;
-    render();
+    playing = true; step = 0; render();
     timer = setInterval(function(){
       if(step >= ORDER.length - 1){ clearInterval(timer); timer = null; return; }
-      step += 1;
-      render();
+      step += 1; render();
     }, 1500);
   }
   runBtn.addEventListener('click', togglePlay);
 
-  // ----- fit-to-width -----
+  /* ============================================================
+     fit-to-width
+     ============================================================ */
   var wrap = document.getElementById('wrap');
   function fit(){
     var w = wrap.clientWidth;
@@ -397,13 +665,185 @@
     board.style.marginLeft = Math.max(0, (w - 1660 * s) / 2) + 'px';
     wrap.style.height = (1560 * s + 8) + 'px';
   }
-  fit();
+
+  /* ============================================================
+     Apply everything
+     ============================================================ */
+  function applyAll(){
+    applyColors();
+    applyHeader();
+    buildBoard();
+    render();
+    fit();
+  }
+
+  /* ============================================================
+     CMS editor panel
+     ============================================================ */
+  var cms = document.getElementById('cms');
+  var cmsBody = document.getElementById('cmsBody');
+
+  function textRow(label, value, onInput){
+    var f = document.createElement('div'); f.className = 'fld';
+    var l = document.createElement('label'); l.textContent = label;
+    var i = document.createElement('input'); i.type = 'text'; i.value = value == null ? '' : value;
+    i.addEventListener('input', function(){ onInput(i.value); });
+    f.appendChild(l); f.appendChild(i);
+    return f;
+  }
+  function colorRow(key, label){
+    var f = document.createElement('div'); f.className = 'fld color';
+    var l = document.createElement('label'); l.textContent = label;
+    var hex = document.createElement('span'); hex.className = 'hex'; hex.textContent = state.colors[key];
+    var i = document.createElement('input'); i.type = 'color'; i.value = normHex(state.colors[key]);
+    i.addEventListener('input', function(){
+      state.colors[key] = i.value; hex.textContent = i.value;
+      applyColors(); persist();
+    });
+    f.appendChild(i); f.appendChild(l); f.appendChild(hex);
+    return f;
+  }
+  function normHex(h){
+    h = String(h || '').trim();
+    if(/^#([0-9a-f]{3})$/i.test(h)) h = '#' + h[1]+h[1]+h[2]+h[2]+h[3]+h[3];
+    return /^#[0-9a-f]{6}$/i.test(h) ? h : '#000000';
+  }
+
+  function details(summaryText, open){
+    var d = document.createElement('details'); if(open) d.open = true;
+    var s = document.createElement('summary'); s.textContent = summaryText;
+    d.appendChild(s);
+    return d;
+  }
+
+  function onText(){ applyHeader(); buildBoard(); render(); persist(); }
+
+  function buildPanel(){
+    cmsBody.innerHTML = '';
+    var T = state.text;
+
+    // --- Header ---
+    var dH = details('Header', true);
+    dH.appendChild(textRow('Eyebrow', T.eyebrowTop, function(v){ T.eyebrowTop=v; onText(); }));
+    dH.appendChild(textRow('Title', T.title, function(v){ T.title=v; onText(); }));
+    dH.appendChild(textRow('Subtitle', T.subtitle, function(v){ T.subtitle=v; onText(); }));
+    dH.appendChild(textRow('Legend — Stage', T.legendStage, function(v){ T.legendStage=v; onText(); }));
+    dH.appendChild(textRow('Legend — Platform', T.legendPlatform, function(v){ T.legendPlatform=v; onText(); }));
+    dH.appendChild(textRow('Legend — Automation', T.legendAutomation, function(v){ T.legendAutomation=v; onText(); }));
+    dH.appendChild(textRow('Legend note', T.legendNote, function(v){ T.legendNote=v; onText(); }));
+    dH.appendChild(textRow('Idle status text', T.phaseIdle, function(v){ T.phaseIdle=v; onText(); }));
+    dH.appendChild(textRow('Run button label', T.runLabel, function(v){ T.runLabel=v; onText(); }));
+    dH.appendChild(textRow('Reset button label', T.resetLabel, function(v){ T.resetLabel=v; onText(); }));
+    cmsBody.appendChild(dH);
+
+    // --- Columns ---
+    var dC = details('Columns (lanes)');
+    T.cols.forEach(function(c, i){
+      dC.appendChild(textRow('Lane ' + (i+1) + ' — code', c.code, function(v){ c.code=v; onText(); }));
+      dC.appendChild(textRow('Lane ' + (i+1) + ' — descriptor', c.desc, function(v){ c.desc=v; onText(); }));
+    });
+    cmsBody.appendChild(dC);
+
+    // --- Phase rail ---
+    var dR = details('Phase rail');
+    T.rails.forEach(function(r, i){
+      dR.appendChild(textRow('Phase ' + (i+1) + ' — label', r.label, function(v){ r.label=v; onText(); }));
+      dR.appendChild(textRow('Phase ' + (i+1) + ' — sub', r.sub, function(v){ r.sub=v; onText(); }));
+    });
+    cmsBody.appendChild(dR);
+
+    // --- Run-flow phase names ---
+    var dP = details('Run-flow phase names');
+    T.phaseNames.forEach(function(name, i){
+      dP.appendChild(textRow('Step ' + (i+1), name, function(v){ T.phaseNames[i]=v; render(); persist(); }));
+    });
+    cmsBody.appendChild(dP);
+
+    // --- Nodes ---
+    var dN = details('Nodes');
+    NODES.forEach(function(n){
+      var txt = state.nodes[n.id];
+      var sub = document.createElement('details'); sub.className = 'sub-node';
+      var ss = document.createElement('summary');
+      ss.textContent = (txt.title || txt.label || n.id) + '  ·  ' + n.id;
+      sub.appendChild(ss);
+      if(n.kind === 'chip'){
+        sub.appendChild(textRow('Label', txt.label, function(v){ txt.label=v; onText(); }));
+      } else if(n.kind === 'gm'){
+        sub.appendChild(textRow('Label', txt.title, function(v){ txt.title=v; onText(); }));
+      } else {
+        if(n.eyebrow !== undefined) sub.appendChild(textRow('Eyebrow', txt.eyebrow, function(v){ txt.eyebrow=v; onText(); }));
+        if(n.titleHtml){
+          sub.appendChild(textRow('Title (HTML, e.g. <br>)', txt.titleHtml, function(v){ txt.titleHtml=v; onText(); }));
+        } else {
+          sub.appendChild(textRow('Title', txt.title, function(v){ txt.title=v; onText(); }));
+        }
+        if(n.tag) sub.appendChild(textRow('Platform tag', txt.tag, function(v){ txt.tag=v; onText(); }));
+        if(n.meta) sub.appendChild(textRow('Meta', txt.meta, function(v){ txt.meta=v; onText(); }));
+      }
+      dN.appendChild(sub);
+    });
+    cmsBody.appendChild(dN);
+
+    // --- Colors ---
+    var dCol = details('Colors');
+    COLOR_GROUPS.forEach(function(g){
+      var t = document.createElement('div'); t.className = 'grp-title'; t.textContent = g.title;
+      dCol.appendChild(t);
+      g.keys.forEach(function(pair){ dCol.appendChild(colorRow(pair[0], pair[1])); });
+    });
+    cmsBody.appendChild(dCol);
+  }
+
+  // open/close
+  function openCms(){ cms.classList.add('open'); cms.setAttribute('aria-hidden','false'); }
+  function closeCms(){ cms.classList.remove('open'); cms.setAttribute('aria-hidden','true'); }
+  document.getElementById('cmsToggle').addEventListener('click', function(){
+    cms.classList.contains('open') ? closeCms() : openCms();
+  });
+  document.getElementById('cmsClose').addEventListener('click', closeCms);
+
+  // export / import / reset
+  document.getElementById('cmsExport').addEventListener('click', function(){
+    var blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'gm-pipeline-content.json';
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  });
+  var fileInput = document.getElementById('cmsFile');
+  document.getElementById('cmsImport').addEventListener('click', function(){ fileInput.click(); });
+  fileInput.addEventListener('change', function(){
+    var f = fileInput.files && fileInput.files[0];
+    if(!f) return;
+    var rd = new FileReader();
+    rd.onload = function(){
+      try{
+        var incoming = JSON.parse(rd.result);
+        state = deepMerge(defaults(), incoming);
+        persist(); applyAll(); buildPanel();
+      }catch(e){ alert('Could not import: invalid JSON file.'); }
+    };
+    rd.readAsText(f);
+    fileInput.value = '';
+  });
+  document.getElementById('cmsReset').addEventListener('click', function(){
+    if(!confirm('Reset all text and colors to the original design?')) return;
+    state = defaults();
+    persist(); applyAll(); buildPanel();
+  });
+
+  /* ============================================================
+     init
+     ============================================================ */
+  applyAll();
+  buildPanel();
+
   requestAnimationFrame(fit);
   [120, 350, 700].forEach(function(t){ setTimeout(fit, t); });
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   window.addEventListener('resize', fit);
-
-  render();
 })();
 </script>
 </body>

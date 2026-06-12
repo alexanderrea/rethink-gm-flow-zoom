@@ -252,7 +252,8 @@
   .cms-btn{
     flex:1; min-width:96px; font:600 11px/1 var(--mono); letter-spacing:0.06em;
     padding:10px 12px; border-radius:8px; cursor:pointer; border:1px solid rgba(255,255,255,0.15);
-    background:#161c25; color:#dbe4ec;
+    background:#161c25; color:#dbe4ec; text-align:center; display:inline-flex;
+    align-items:center; justify-content:center;
   }
   .cms-btn.primary{ background:#3fe0d8; color:#04110f; border-color:#3fe0d8; }
   .cms-btn.danger{ color:#ff9d9d; border-color:rgba(255,120,120,0.35); }
@@ -320,7 +321,7 @@
     <div class="cms-body" id="cmsBody"></div>
     <div class="cms-foot">
       <button class="cms-btn primary" id="cmsExport" type="button">Export JSON</button>
-      <button class="cms-btn" id="cmsImport" type="button">Import JSON</button>
+      <label class="cms-btn" id="cmsImport" for="cmsFile">Import JSON</label>
       <button class="cms-btn danger" id="cmsReset" type="button">Reset</button>
       <input type="file" id="cmsFile" accept="application/json,.json" hidden>
     </div>
@@ -813,7 +814,6 @@
     setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
   });
   var fileInput = document.getElementById('cmsFile');
-  document.getElementById('cmsImport').addEventListener('click', function(){ fileInput.click(); });
   fileInput.addEventListener('change', function(){
     var f = fileInput.files && fileInput.files[0];
     if(!f) return;

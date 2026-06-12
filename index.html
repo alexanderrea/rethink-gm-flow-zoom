@@ -233,11 +233,13 @@
   .cms .grp-title{ font:600 10px/1 var(--mono); letter-spacing:0.14em; color:#6b7785; margin:12px 4px 8px; text-transform:uppercase; }
   .fld{ margin:0 0 9px; }
   .fld label{ display:block; font:500 10px/1.3 var(--mono); letter-spacing:0.04em; color:#8b97a4; margin-bottom:4px; }
-  .fld input[type=text]{
+  .fld textarea{
     width:100%; background:#11161e; border:1px solid rgba(255,255,255,0.12); border-radius:7px;
-    color:#e6edf3; font:400 12px/1.3 var(--mono); padding:8px 10px;
+    color:#e6edf3; font:400 12px/1.4 var(--mono); padding:8px 10px;
+    resize:vertical; overflow:hidden; min-height:34px; display:block;
   }
-  .fld input[type=text]:focus{ outline:none; border-color:#3fe0d8; }
+  .fld textarea:focus{ outline:none; border-color:#3fe0d8; }
+  .fld .hint{ font:400 9px/1.3 var(--mono); color:#5b6675; margin-top:3px; }
   .fld.color{ display:flex; align-items:center; gap:10px; margin-bottom:7px; }
   .fld.color label{ flex:1; margin:0; }
   .fld.color input[type=color]{
@@ -314,7 +316,7 @@
     <div class="cms-head">
       <div>
         <h2>PAGE EDITOR</h2>
-        <div class="sub">Text &amp; colors · saved in this browser</div>
+        <div class="sub">Text &amp; colors · saved in this browser · press Enter for a line break</div>
       </div>
       <button class="cms-x" id="cmsClose" type="button" aria-label="Close">×</button>
     </div>
@@ -349,7 +351,7 @@
     { id:'figma',    l:720, t:452,  w:390, h:118, eyebrow:'T2 · CRAFT',    title:'Asset Creation', tSize:'title--sm', tag:'FIGMA',  tagTone:'magenta' },
     { id:'celtra',   l:720, t:604,  w:390, h:118, eyebrow:'T2 · DELIVERY', title:'Scale Adaptation', tSize:'title--sm', tag:'CELTRA', tagTone:'magenta' },
     { id:'t2dam',    l:720, t:756,  w:390, h:108, eyebrow:'T2 · HANDOFF',  title:'DAM Delivery', tSize:'title--xs', tag:'BYNDER', tagTone:'magenta', tagSm:true, cls:'node--dashed' },
-    { id:'ziflow',   l:720, t:894,  w:390, h:128, eyebrow:'T2 · REVIEW',   titleHtml:'Legal Review<br>&amp; Feedback Loop', tSize:'title--wrap', tag:'ZIFLOW', tagTone:'lime', cls:'node--limeglow' },
+    { id:'ziflow',   l:720, t:894,  w:390, h:128, eyebrow:'T2 · REVIEW',   title:'Legal Review\n& Feedback Loop', tSize:'title--wrap', tag:'ZIFLOW', tagTone:'lime', cls:'node--limeglow' },
     { id:'assetcentral', l:720, t:1042, w:390, h:60, kind:'hub', title:'Asset Central', cls:'node--hub node--limeglow' },
     { id:'clinch',   l:720, t:1206, w:390, h:96,  eyebrow:'T2 · DISTRIBUTION', title:'Traffick', tSize:'title--sm', tag:'CLINCH', tagTone:'lime', cls:'node--limeglow' },
     { id:'t2final',  l:720, t:1318, w:390, h:96,  eyebrow:'T2 · ARCHIVE',  title:'Final Asset — DAM', tSize:'title--sm', tag:'BYNDER', tagTone:'magenta' },
@@ -421,7 +423,7 @@
     var o = {};
     NODES.forEach(function(n){
       o[n.id] = {
-        eyebrow: n.eyebrow || '', title: n.title || '', titleHtml: n.titleHtml || '',
+        eyebrow: n.eyebrow || '', title: n.title || '',
         tag: n.tag || '', meta: n.meta || '', label: n.label || ''
       };
     });
@@ -460,13 +462,33 @@
 
   function clone(o){ return JSON.parse(JSON.stringify(o)); }
 
+  // Legacy data (older exports / saved edits) stored node titles as raw
+  // HTML in `titleHtml`. Convert any such field to a plain title with
+  // newlines so it round-trips through the textarea editor.
+  function normalize(s){
+    if(s && s.nodes){
+      Object.keys(s.nodes).forEach(function(id){
+        var n = s.nodes[id];
+        if(n && n.titleHtml){
+          if(!n.title){
+            n.title = String(n.titleHtml)
+              .replace(/<br\s*\/?>/gi, '\n')
+              .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+          }
+          delete n.titleHtml;
+        }
+      });
+    }
+    return s;
+  }
+
   function mergeLocal(baseline){
     var s = clone(baseline);
     try{
       var raw = localStorage.getItem(LS_KEY);
       if(raw) deepMerge(s, JSON.parse(raw));
     }catch(e){ /* ignore */ }
-    return s;
+    return normalize(s);
   }
   function persist(){
     try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
@@ -501,38 +523,39 @@
 
   function tagSpan(n, txt){
     var cls = 'tag tag--' + (n.tagTone || 'magenta') + (n.tagSm ? ' tag--sm' : '');
-    return '<span class="' + cls + '">' + esc(txt.tag) + '</span>';
+    return '<span class="' + cls + '">' + escML(txt.tag) + '</span>';
   }
   function titleSpan(n, txt){
     var cls = 'title' + (n.tSize ? ' ' + n.tSize : '');
-    var html = n.titleHtml ? txt.titleHtml : esc(txt.title);
-    return '<span class="' + cls + '">' + html + '</span>';
+    return '<span class="' + cls + '">' + escML(txt.title) + '</span>';
   }
   function esc(s){
     return String(s == null ? '' : s)
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
+  // escape, then turn newlines into <br> so editors can add line breaks
+  function escML(s){ return esc(s).replace(/\r?\n/g, '<br>'); }
 
   function innerHtml(n, txt){
     switch(n.kind){
       case 'gm':
-        return '<div class="card card--center"><span class="gm-label">' + esc(txt.title || 'GM') + '</span></div>';
+        return '<div class="card card--center"><span class="gm-label">' + escML(txt.title || 'GM') + '</span></div>';
       case 'entry':
         return '<div class="card card--entry">' +
-                 '<span class="eyebrow eyebrow--entry">' + esc(txt.eyebrow) + '</span>' +
-                 '<span class="title title--entry">' + esc(txt.title) + '</span></div>';
+                 '<span class="eyebrow eyebrow--entry">' + escML(txt.eyebrow) + '</span>' +
+                 '<span class="title title--entry">' + escML(txt.title) + '</span></div>';
       case 'chip':
         return '<div class="card card--chip"><span class="dot dot--chip"></span>' +
-                 '<span class="chip-label">' + esc(txt.label) + '</span></div>';
+                 '<span class="chip-label">' + escML(txt.label) + '</span></div>';
       case 'hub':
         return '<div class="card card--hub"><span class="dot dot--hub"></span>' +
-                 '<span class="title title--hub">' + esc(txt.title) + '</span></div>';
+                 '<span class="title title--hub">' + escML(txt.title) + '</span></div>';
       case 'wide':
         return '<div class="card card--row"><div class="col-l">' +
-                 '<span class="eyebrow">' + esc(txt.eyebrow) + '</span>' + titleSpan(n, txt) +
-                 '</div><span class="meta">' + esc(txt.meta) + '</span></div>';
+                 '<span class="eyebrow">' + escML(txt.eyebrow) + '</span>' + titleSpan(n, txt) +
+                 '</div><span class="meta">' + escML(txt.meta) + '</span></div>';
       default:
-        return '<div class="card"><span class="eyebrow">' + esc(txt.eyebrow) + '</span>' +
+        return '<div class="card"><span class="eyebrow">' + escML(txt.eyebrow) + '</span>' +
                  titleSpan(n, txt) + (n.tag ? tagSpan(n, txt) : '') + '</div>';
     }
   }
@@ -547,8 +570,8 @@
       var d = document.createElement('div');
       d.className = 'col-head';
       d.style.left = COL_POS[i] + 'px';
-      d.innerHTML = '<span class="col-code">' + esc(c.code) + '</span>' +
-                    '<span class="col-desc">' + esc(c.desc) + '</span>';
+      d.innerHTML = '<span class="col-code">' + escML(c.code) + '</span>' +
+                    '<span class="col-desc">' + escML(c.desc) + '</span>';
       board.appendChild(d);
     });
 
@@ -558,8 +581,8 @@
       d.className = 'rail';
       d.id = RAIL_IDS[i];
       d.style.top = RAIL_TOP[i] + 'px';
-      d.innerHTML = '<span class="rail-label">' + esc(r.label) + '</span>' +
-                    '<span class="rail-sub">' + esc(r.sub) + '</span>';
+      d.innerHTML = '<span class="rail-label">' + escML(r.label) + '</span>' +
+                    '<span class="rail-sub">' + escML(r.sub) + '</span>';
       board.appendChild(d);
     });
 
@@ -581,15 +604,15 @@
 
   function applyHeader(){
     var T = state.text;
-    setText('eyebrowTop', T.eyebrowTop);
-    setText('h1Title', T.title);
-    setText('subtitle', T.subtitle);
-    setText('legStage', T.legendStage);
-    setText('legPlatform', T.legendPlatform);
-    setText('legAutomation', T.legendAutomation);
-    setText('legNote', T.legendNote);
+    setHTML('eyebrowTop', T.eyebrowTop);
+    setHTML('h1Title', T.title);
+    setHTML('subtitle', T.subtitle);
+    setHTML('legStage', T.legendStage);
+    setHTML('legPlatform', T.legendPlatform);
+    setHTML('legAutomation', T.legendAutomation);
+    setHTML('legNote', T.legendNote);
   }
-  function setText(id, v){ var el = document.getElementById(id); if(el) el.textContent = v; }
+  function setHTML(id, v){ var el = document.getElementById(id); if(el) el.innerHTML = escML(v); }
 
   /* ============================================================
      Run-flow sequencing
@@ -693,8 +716,10 @@
   function textRow(label, value, onInput){
     var f = document.createElement('div'); f.className = 'fld';
     var l = document.createElement('label'); l.textContent = label;
-    var i = document.createElement('input'); i.type = 'text'; i.value = value == null ? '' : value;
-    i.addEventListener('input', function(){ onInput(i.value); });
+    var i = document.createElement('textarea'); i.rows = 1; i.value = value == null ? '' : value;
+    function grow(){ i.style.height = 'auto'; i.style.height = i.scrollHeight + 'px'; }
+    i.addEventListener('input', function(){ grow(); onInput(i.value); });
+    requestAnimationFrame(grow);
     f.appendChild(l); f.appendChild(i);
     return f;
   }
@@ -780,11 +805,7 @@
         sub.appendChild(textRow('Label', txt.title, function(v){ txt.title=v; onText(); }));
       } else {
         if(n.eyebrow !== undefined) sub.appendChild(textRow('Eyebrow', txt.eyebrow, function(v){ txt.eyebrow=v; onText(); }));
-        if(n.titleHtml){
-          sub.appendChild(textRow('Title (HTML, e.g. <br>)', txt.titleHtml, function(v){ txt.titleHtml=v; onText(); }));
-        } else {
-          sub.appendChild(textRow('Title', txt.title, function(v){ txt.title=v; onText(); }));
-        }
+        sub.appendChild(textRow('Title', txt.title, function(v){ txt.title=v; onText(); }));
         if(n.tag) sub.appendChild(textRow('Platform tag', txt.tag, function(v){ txt.tag=v; onText(); }));
         if(n.meta) sub.appendChild(textRow('Meta', txt.meta, function(v){ txt.meta=v; onText(); }));
       }
@@ -827,7 +848,7 @@
     rd.onload = function(){
       try{
         var incoming = JSON.parse(rd.result);
-        state = deepMerge(defaults(), incoming);
+        state = normalize(deepMerge(defaults(), incoming));
         persist(); applyAll(); buildPanel();
       }catch(e){ alert('Could not import: invalid JSON file.'); }
     };
@@ -858,7 +879,7 @@
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(published){
       if(published && typeof published === 'object'){
-        publishedBaseline = deepMerge(defaults(), published);
+        publishedBaseline = normalize(deepMerge(defaults(), published));
         state = mergeLocal(publishedBaseline);
       }
     })

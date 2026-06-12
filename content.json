@@ -83,7 +83,7 @@
     },
     "brief": {
       "eyebrow": "ENTRY POINT",
-      "title": "CLIENT BRIEF",
+      "title": "CLIENT BRIEF\n\nTierless approach - no separate teams/agenda/ambitions",
       "tag": "",
       "meta": "",
       "label": ""
@@ -93,7 +93,7 @@
       "title": "",
       "tag": "",
       "meta": "",
-      "label": "SMARTSHEET"
+      "label": "SMARTSHEET\n\nInteractive IMC for all partner’s visibility"
     },
     "preprod": {
       "eyebrow": "T1 · HUMAN",
@@ -104,7 +104,7 @@
     },
     "shoot": {
       "eyebrow": "T1 · CRAFT",
-      "title": "Shoot",
+      "title": "Shoot\n\nBTS on shoots to fulfill all tier needs",
       "tag": "",
       "meta": "",
       "label": ""
@@ -125,13 +125,13 @@
     },
     "dco": {
       "eyebrow": "T2 · HUMAN",
-      "title": "DCO Pipeline Creative",
+      "title": "DCO Pipeline Creative\n\nCreative Split 10 / 60 / 30\n",
       "tag": "",
       "meta": "",
       "label": ""
     },
     "figma": {
-      "eyebrow": "T2 · CRAFT",
+      "eyebrow": "T2 · CRAFT EN/FR/Bilngual",
       "title": "Asset Creation",
       "tag": "FIGMA",
       "meta": "",
@@ -160,7 +160,7 @@
     },
     "assetcentral": {
       "eyebrow": "",
-      "title": "Asset Central",
+      "title": "Asset Central\n\nSelf Audit - Tech is modular. Able to adapt tech in real time without breaking larger workflow",
       "tag": "",
       "meta": "",
       "label": ""

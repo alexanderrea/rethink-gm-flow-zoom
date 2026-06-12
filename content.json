@@ -1,22 +1,22 @@
 {
   "colors": {
-    "cyan": "#3fe0d8",
-    "cyan-bright": "#7af0ea",
-    "magenta": "#f25cc1",
-    "orchid": "#c569cf",
-    "chip-label": "#d68fdc",
-    "lime": "#a6e635",
-    "lime-bright": "#c4f06a",
-    "connector": "#5fd8cf",
-    "text-strong": "#f4f8fb",
-    "text": "#eaf0f5",
+    "cyan": "#3c86f7",
+    "cyan-bright": "#3c86f7",
+    "magenta": "#2254cb",
+    "orchid": "#7f7f7f",
+    "chip-label": "#2254cb",
+    "lime": "#e9f2fe",
+    "lime-bright": "#e9f2fe",
+    "connector": "#464646",
+    "text-strong": "#ffffff",
+    "text": "#e9f2fe",
     "muted": "#7e8a99",
-    "faint": "#647284",
-    "faint2": "#5b6675",
-    "legend": "#8c97a8",
-    "rail": "#d6efec",
-    "page-glow": "#0d1825",
-    "page-base": "#06090f",
+    "faint": "#7f7f7f",
+    "faint2": "#464646",
+    "legend": "#7f7f7f",
+    "rail": "#e9f2fe",
+    "page-glow": "#1e1e1e",
+    "page-base": "#1e1e1e",
     "header-top": "#090f17",
     "header-bottom": "#080d14",
     "card-top": "#111a23",
@@ -25,7 +25,7 @@
     "card-solid-bottom": "#0a0f16"
   },
   "text": {
-    "eyebrowTop": "Three",
+    "eyebrowTop": "GM · MARKETING OPERATING MODEL",
     "title": "Creative Production Pipeline",
     "subtitle": "Tier 1 · Tier 2 · Tier Social — three lanes, running in parallel",
     "legendStage": "Stage",
@@ -125,7 +125,7 @@
     },
     "dco": {
       "eyebrow": "T2 · HUMAN",
-      "title": "DCO Pipeline",
+      "title": "DCO Pipeline Creative",
       "tag": "",
       "meta": "",
       "label": ""
@@ -154,7 +154,7 @@
     "ziflow": {
       "eyebrow": "T2 · REVIEW",
       "title": "Legal Review\n& Feedback Loop",
-      "tag": "ZIFLOW",
+      "tag": "ZIFLOW (GM Platform)",
       "meta": "",
       "label": ""
     },
@@ -167,8 +167,8 @@
     },
     "clinch": {
       "eyebrow": "T2 · DISTRIBUTION",
-      "title": "Traffick",
-      "tag": "CLINCH",
+      "title": "Traffic",
+      "tag": "CLINCH (GM Platform)",
       "meta": "",
       "label": ""
     },

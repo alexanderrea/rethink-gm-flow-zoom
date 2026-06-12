@@ -124,6 +124,7 @@
   /* ---------- Nodes ---------- */
   .node{
     position:absolute; box-sizing:border-box; cursor:pointer;
+    display:flex; flex-direction:column;
     border:1.6px solid rgb(var(--cyan-rgb)/0.5); border-radius:14px;
     --bg:linear-gradient(180deg, rgb(var(--card-top-rgb)/0.6), rgb(var(--card-bottom-rgb)/0.82));
     background:var(--bg);
@@ -160,10 +161,10 @@
   }
 
   /* card inner layouts */
-  .card{ height:100%; padding:0 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; }
-  .card--entry{ padding:0 26px; gap:6px; }
+  .card{ flex:1 1 auto; width:100%; padding:14px 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; }
+  .card--entry{ padding:14px 26px; gap:6px; }
   .card--center{ align-items:center; justify-content:center; flex-direction:row; }
-  .card--row{ flex-direction:row; align-items:center; justify-content:space-between; gap:18px; padding:0 26px; }
+  .card--row{ flex-direction:row; align-items:center; justify-content:space-between; gap:18px; padding:14px 26px; }
   .card--chip{ height:auto; padding:7px 14px; flex-direction:row; align-items:center; gap:9px; }
   .card--hub{ flex-direction:row; align-items:center; gap:12px; }
 
@@ -186,6 +187,9 @@
   .dot--hub{ background:var(--lime); }
   .chip-label{ font:600 13px/1 var(--mono); letter-spacing:0.18em; color:var(--chip-label); }
   .col-l{ display:flex; flex-direction:column; gap:7px; }
+  .cardtext{ display:flex; flex-direction:column; gap:5px; min-width:0; }
+  .desc{ font:400 13px/1.35 var(--display); letter-spacing:0; color:var(--muted); }
+  .card--chip .desc{ font-size:11.5px; line-height:1.3; }
 
   @media (prefers-reduced-motion: reduce){
     .connectors .flow, .connectors .flow-fast{ animation:none !important; }
@@ -525,10 +529,6 @@
     var cls = 'tag tag--' + (n.tagTone || 'magenta') + (n.tagSm ? ' tag--sm' : '');
     return '<span class="' + cls + '">' + escML(txt.tag) + '</span>';
   }
-  function titleSpan(n, txt){
-    var cls = 'title' + (n.tSize ? ' ' + n.tSize : '');
-    return '<span class="' + cls + '">' + escML(txt.title) + '</span>';
-  }
   function esc(s){
     return String(s == null ? '' : s)
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -536,20 +536,42 @@
   // escape, then turn newlines into <br> so editors can add line breaks
   function escML(s){ return esc(s).replace(/\r?\n/g, '<br>'); }
 
+  // A title/label may carry a description after the first blank line:
+  // "Title\n\nLonger explanatory copy". Render the remainder as .desc.
+  function splitDesc(s){
+    s = String(s == null ? '' : s);
+    var m = s.match(/\n[ \t]*\n/);
+    if(!m) return { title: s, desc: '' };
+    return {
+      title: s.slice(0, m.index),
+      desc:  s.slice(m.index + m[0].length).replace(/^\s+/, '')
+    };
+  }
+  function descSpan(desc){ return desc ? '<span class="desc">' + escML(desc) + '</span>' : ''; }
+  function titleSpan(n, txt){
+    var p = splitDesc(txt.title);
+    var cls = 'title' + (n.tSize ? ' ' + n.tSize : '');
+    return '<span class="' + cls + '">' + escML(p.title) + '</span>' + descSpan(p.desc);
+  }
+
   function innerHtml(n, txt){
+    var p;
     switch(n.kind){
       case 'gm':
-        return '<div class="card card--center"><span class="gm-label">' + escML(txt.title || 'GM') + '</span></div>';
+        return '<div class="card card--center"><span class="gm-label">' + escML(splitDesc(txt.title).title || 'GM') + '</span></div>';
       case 'entry':
+        p = splitDesc(txt.title);
         return '<div class="card card--entry">' +
                  '<span class="eyebrow eyebrow--entry">' + escML(txt.eyebrow) + '</span>' +
-                 '<span class="title title--entry">' + escML(txt.title) + '</span></div>';
+                 '<span class="title title--entry">' + escML(p.title) + '</span>' + descSpan(p.desc) + '</div>';
       case 'chip':
+        p = splitDesc(txt.label);
         return '<div class="card card--chip"><span class="dot dot--chip"></span>' +
-                 '<span class="chip-label">' + escML(txt.label) + '</span></div>';
+                 '<span class="cardtext"><span class="chip-label">' + escML(p.title) + '</span>' + descSpan(p.desc) + '</span></div>';
       case 'hub':
+        p = splitDesc(txt.title);
         return '<div class="card card--hub"><span class="dot dot--hub"></span>' +
-                 '<span class="title title--hub">' + escML(txt.title) + '</span></div>';
+                 '<span class="cardtext"><span class="title title--hub">' + escML(p.title) + '</span>' + descSpan(p.desc) + '</span></div>';
       case 'wide':
         return '<div class="card card--row"><div class="col-l">' +
                  '<span class="eyebrow">' + escML(txt.eyebrow) + '</span>' + titleSpan(n, txt) +
@@ -595,7 +617,7 @@
       el.style.left = n.l + 'px';
       el.style.top  = n.t + 'px';
       if(n.w) el.style.width  = n.w + 'px';
-      if(n.h) el.style.height = n.h + 'px';
+      if(n.h) el.style.minHeight = n.h + 'px';
       el.innerHTML = innerHtml(n, txt);
       board.appendChild(el);
       byId[n.id] = el;

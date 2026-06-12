@@ -1,0 +1,230 @@
+{
+  "colors": {
+    "cyan": "#3fe0d8",
+    "cyan-bright": "#7af0ea",
+    "magenta": "#f25cc1",
+    "orchid": "#c569cf",
+    "chip-label": "#d68fdc",
+    "lime": "#a6e635",
+    "lime-bright": "#c4f06a",
+    "connector": "#5fd8cf",
+    "text-strong": "#f4f8fb",
+    "text": "#eaf0f5",
+    "muted": "#7e8a99",
+    "faint": "#647284",
+    "faint2": "#5b6675",
+    "legend": "#8c97a8",
+    "rail": "#d6efec",
+    "page-glow": "#0d1825",
+    "page-base": "#06090f",
+    "header-top": "#090f17",
+    "header-bottom": "#080d14",
+    "card-top": "#111a23",
+    "card-bottom": "#090e14",
+    "card-solid-top": "#0f1822",
+    "card-solid-bottom": "#0a0f16"
+  },
+  "text": {
+    "eyebrowTop": "Test",
+    "title": "Creative Production Pipeline",
+    "subtitle": "Tier 1 · Tier 2 · Tier Social — three lanes, running in parallel",
+    "legendStage": "Stage",
+    "legendPlatform": "Platform",
+    "legendAutomation": "Automation",
+    "legendNote": "— — —  dashed = asset / data flow",
+    "phaseIdle": "HOVER ANY STEP FOR DETAIL",
+    "runLabel": "Run flow",
+    "resetLabel": "Reset",
+    "cols": [
+      {
+        "code": "T1",
+        "desc": "Tier 1 · Traditional Advertising"
+      },
+      {
+        "code": "T2",
+        "desc": "Tier 2 · DCO · Scale Media"
+      },
+      {
+        "code": "TS",
+        "desc": "Tier Social · Social"
+      }
+    ],
+    "rails": [
+      {
+        "label": "HUMAN",
+        "sub": "Strategy & planning"
+      },
+      {
+        "label": "CRAFT",
+        "sub": "Make the work"
+      },
+      {
+        "label": "DELIVERY",
+        "sub": "Ship & run"
+      }
+    ],
+    "phaseNames": [
+      "CLIENT BRIEF",
+      "HUMAN",
+      "CRAFT",
+      "DELIVERY",
+      "CONSOLIDATE",
+      "APPROVE & ROUTE",
+      "MEASURE & LOOP"
+    ]
+  },
+  "nodes": {
+    "gm": {
+      "eyebrow": "",
+      "title": "",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "brief": {
+      "eyebrow": "ENTRY POINT",
+      "title": "CLIENT BRIEF",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "smartsheet": {
+      "eyebrow": "",
+      "title": "",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": "SMARTSHEET"
+    },
+    "preprod": {
+      "eyebrow": "T1 · HUMAN",
+      "title": "Pre-Production",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "shoot": {
+      "eyebrow": "T1 · CRAFT",
+      "title": "Shoot",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "post": {
+      "eyebrow": "T1 · DELIVERY",
+      "title": "Post",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "t1dam": {
+      "eyebrow": "T1 · ARCHIVE",
+      "title": "Final Assets — DAM",
+      "titleHtml": "",
+      "tag": "BYNDER",
+      "meta": "",
+      "label": ""
+    },
+    "dco": {
+      "eyebrow": "T2 · HUMAN",
+      "title": "DCO Pipeline",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "figma": {
+      "eyebrow": "T2 · CRAFT",
+      "title": "Asset Creation",
+      "titleHtml": "",
+      "tag": "FIGMA",
+      "meta": "",
+      "label": ""
+    },
+    "celtra": {
+      "eyebrow": "T2 · DELIVERY",
+      "title": "Scale Adaptation",
+      "titleHtml": "",
+      "tag": "CELTRA",
+      "meta": "",
+      "label": ""
+    },
+    "t2dam": {
+      "eyebrow": "T2 · HANDOFF",
+      "title": "DAM Delivery",
+      "titleHtml": "",
+      "tag": "BYNDER",
+      "meta": "",
+      "label": ""
+    },
+    "ziflow": {
+      "eyebrow": "T2 · REVIEW",
+      "title": "",
+      "titleHtml": "Legal Review<br>&amp; Feedback Loop",
+      "tag": "ZIFLOW",
+      "meta": "",
+      "label": ""
+    },
+    "assetcentral": {
+      "eyebrow": "",
+      "title": "Asset Central",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "clinch": {
+      "eyebrow": "T2 · DISTRIBUTION",
+      "title": "Traffick",
+      "titleHtml": "",
+      "tag": "CLINCH",
+      "meta": "",
+      "label": ""
+    },
+    "t2final": {
+      "eyebrow": "T2 · ARCHIVE",
+      "title": "Final Asset — DAM",
+      "titleHtml": "",
+      "tag": "BYNDER",
+      "meta": "",
+      "label": ""
+    },
+    "insight": {
+      "eyebrow": "T2 · MEASUREMENT",
+      "title": "Reactive Insight",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "BI-MONTHLY · CADENCE TBD",
+      "label": ""
+    },
+    "social": {
+      "eyebrow": "TS · HUMAN",
+      "title": "Social Strategy",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "content": {
+      "eyebrow": "TS · CRAFT",
+      "title": "Content Creation",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    },
+    "community": {
+      "eyebrow": "TS · DELIVERY",
+      "title": "Community Mgmt",
+      "titleHtml": "",
+      "tag": "",
+      "meta": "",
+      "label": ""
+    }
+  }
+}

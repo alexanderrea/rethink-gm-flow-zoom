@@ -454,8 +454,14 @@
     return base;
   }
 
-  function load(){
-    var s = defaults();
+  // The published baseline = code defaults overlaid with content.json
+  // (fetched at startup). Per-browser localStorage edits layer on top.
+  var publishedBaseline = defaults();
+
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+  function mergeLocal(baseline){
+    var s = clone(baseline);
     try{
       var raw = localStorage.getItem(LS_KEY);
       if(raw) deepMerge(s, JSON.parse(raw));
@@ -466,7 +472,7 @@
     try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
   }
 
-  var state = load();
+  var state = mergeLocal(publishedBaseline);
 
   /* ============================================================
      COLOR application (sets hex + rgb-channel CSS vars)
@@ -829,21 +835,35 @@
     fileInput.value = '';
   });
   document.getElementById('cmsReset').addEventListener('click', function(){
-    if(!confirm('Reset all text and colors to the original design?')) return;
-    state = defaults();
-    persist(); applyAll(); buildPanel();
+    if(!confirm('Discard your local edits and return to the published version?')) return;
+    try{ localStorage.removeItem(LS_KEY); }catch(e){}
+    state = clone(publishedBaseline);
+    applyAll(); buildPanel();
   });
 
   /* ============================================================
-     init
+     init — fetch the published baseline (content.json), then render.
+     Precedence: code defaults < content.json < this browser's edits.
      ============================================================ */
-  applyAll();
-  buildPanel();
-
-  requestAnimationFrame(fit);
-  [120, 350, 700].forEach(function(t){ setTimeout(fit, t); });
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  function boot(){
+    applyAll();
+    buildPanel();
+    requestAnimationFrame(fit);
+    [120, 350, 700].forEach(function(t){ setTimeout(fit, t); });
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  }
   window.addEventListener('resize', fit);
+
+  fetch('content.json', { cache:'no-store' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(published){
+      if(published && typeof published === 'object'){
+        publishedBaseline = deepMerge(defaults(), published);
+        state = mergeLocal(publishedBaseline);
+      }
+    })
+    .catch(function(){ /* no content.json — use code defaults */ })
+    .then(boot);
 })();
 </script>
 </body>

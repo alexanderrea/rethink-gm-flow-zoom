@@ -25,7 +25,7 @@
     "card-solid-bottom": "#0a0f16"
   },
   "text": {
-    "eyebrowTop": "Test",
+    "eyebrowTop": "Three",
     "title": "Creative Production Pipeline",
     "subtitle": "Tier 1 · Tier 2 · Tier Social — three lanes, running in parallel",
     "legendStage": "Stage",
@@ -77,7 +77,6 @@
     "gm": {
       "eyebrow": "",
       "title": "",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -85,7 +84,6 @@
     "brief": {
       "eyebrow": "ENTRY POINT",
       "title": "CLIENT BRIEF",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -93,7 +91,6 @@
     "smartsheet": {
       "eyebrow": "",
       "title": "",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": "SMARTSHEET"
@@ -101,7 +98,6 @@
     "preprod": {
       "eyebrow": "T1 · HUMAN",
       "title": "Pre-Production",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -109,7 +105,6 @@
     "shoot": {
       "eyebrow": "T1 · CRAFT",
       "title": "Shoot",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -117,7 +112,6 @@
     "post": {
       "eyebrow": "T1 · DELIVERY",
       "title": "Post",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -125,7 +119,6 @@
     "t1dam": {
       "eyebrow": "T1 · ARCHIVE",
       "title": "Final Assets — DAM",
-      "titleHtml": "",
       "tag": "BYNDER",
       "meta": "",
       "label": ""
@@ -133,7 +126,6 @@
     "dco": {
       "eyebrow": "T2 · HUMAN",
       "title": "DCO Pipeline",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -141,7 +133,6 @@
     "figma": {
       "eyebrow": "T2 · CRAFT",
       "title": "Asset Creation",
-      "titleHtml": "",
       "tag": "FIGMA",
       "meta": "",
       "label": ""
@@ -149,7 +140,6 @@
     "celtra": {
       "eyebrow": "T2 · DELIVERY",
       "title": "Scale Adaptation",
-      "titleHtml": "",
       "tag": "CELTRA",
       "meta": "",
       "label": ""
@@ -157,7 +147,6 @@
     "t2dam": {
       "eyebrow": "T2 · HANDOFF",
       "title": "DAM Delivery",
-      "titleHtml": "",
       "tag": "BYNDER",
       "meta": "",
       "label": ""
@@ -172,7 +161,6 @@
     "assetcentral": {
       "eyebrow": "",
       "title": "Asset Central",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -180,7 +168,6 @@
     "clinch": {
       "eyebrow": "T2 · DISTRIBUTION",
       "title": "Traffick",
-      "titleHtml": "",
       "tag": "CLINCH",
       "meta": "",
       "label": ""
@@ -188,7 +175,6 @@
     "t2final": {
       "eyebrow": "T2 · ARCHIVE",
       "title": "Final Asset — DAM",
-      "titleHtml": "",
       "tag": "BYNDER",
       "meta": "",
       "label": ""
@@ -196,7 +182,6 @@
     "insight": {
       "eyebrow": "T2 · MEASUREMENT",
       "title": "Reactive Insight",
-      "titleHtml": "",
       "tag": "",
       "meta": "BI-MONTHLY · CADENCE TBD",
       "label": ""
@@ -204,7 +189,6 @@
     "social": {
       "eyebrow": "TS · HUMAN",
       "title": "Social Strategy",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -212,7 +196,6 @@
     "content": {
       "eyebrow": "TS · CRAFT",
       "title": "Content Creation",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
@@ -220,7 +203,6 @@
     "community": {
       "eyebrow": "TS · DELIVERY",
       "title": "Community Mgmt",
-      "titleHtml": "",
       "tag": "",
       "meta": "",
       "label": ""
